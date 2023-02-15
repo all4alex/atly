@@ -24,7 +24,7 @@ dev_dependencies:
   flutter_test: 
     sdk: flutter
   flutter_lints: ^2.0.0
-  flutter_native_splash: ^2.2.17
+  flutter_native_splash: ^2.2.16
   flutter_launcher_icons: ^0.11.0
 
 # The following section is specific to Flutter packages.
@@ -68,19 +68,10 @@ flutter:
   # see https://flutter.dev/custom-fonts/#from-packages
 
 
-
 flutter_native_splash:
-  color: "#ffffff"
-  image: assets/icons/atly_splash_white_icon.png
-  branding: assets/icons/atly_splash_white_text_icon.png
-  color_dark: "#121212"
-  image_dark: assets/icons/atly_splash_dark_icon.png
-  branding_dark: assets/icons/atly_splash_dark_text_icon.png
-
+  background_image: "assets/images/splash_screen_img.png"
+  
   android_12:
-    image: assets/icons/atly_splash_white_icon.png
-    icon_background_color: "#ffffff"
-    image_dark: assets/icons/atly_splash_dark_icon.png
-    icon_background_color_dark: "#121212"
-
+    image: assets/icons/app_launcher_icon.png
+  
   web: false
