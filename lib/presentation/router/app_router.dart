@@ -5,7 +5,8 @@ import '../../core/exceptions/route_exception.dart';
 import '../screens/home_screen/home_screen.dart';
 
 class AppRouter {
-  static const String home = '/';
+  static const String home = '/home';
+  static const String login = '/';
 
   const AppRouter._();
 
@@ -14,8 +15,14 @@ class AppRouter {
       case home:
         return MaterialPageRoute(
           builder: (_) => HomeScreen(
-            title: Strings.homeScreenTitle,
-          ),
+              // title: Strings.homeScreenTitle,
+              ),
+        );
+      case login:
+        return MaterialPageRoute(
+          builder: (_) => HomeScreen(
+              // title: Strings.homeScreenTitle,
+              ),
         );
       default:
         throw const RouteException('Route not found!');

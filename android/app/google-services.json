@@ -1,0 +1,90 @@
+{
+  "project_info": {
+    "project_number": "884754944274",
+    "project_id": "atly-98006",
+    "storage_bucket": "atly-98006.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:884754944274:android:18d79d3b4b3a35705ae3cb",
+        "android_client_info": {
+          "package_name": "com.atly.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "884754944274-bldkn3bqrkemd00ej32gbliggvsn3hvg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.atly.app",
+            "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
+          }
+        },
+        {
+          "client_id": "884754944274-hq4mo700h0e1cq50t32hclb50c4s89c3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAPIZZWNzoCaPViHm_d1TJHg0AoEH3V11k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "884754944274-hq4mo700h0e1cq50t32hclb50c4s89c3.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "884754944274-74q7effetu7q9n5jlh86v788j5k3349t.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.atly.Atly"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:884754944274:android:fe5786732c2895235ae3cb",
+        "android_client_info": {
+          "package_name": "com.example.atly"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "884754944274-hq4mo700h0e1cq50t32hclb50c4s89c3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAPIZZWNzoCaPViHm_d1TJHg0AoEH3V11k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "884754944274-hq4mo700h0e1cq50t32hclb50c4s89c3.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "884754944274-74q7effetu7q9n5jlh86v788j5k3349t.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.atly.Atly"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

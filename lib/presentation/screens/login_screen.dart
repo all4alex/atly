@@ -1,7 +1,10 @@
+import 'package:atly/presentation/router/app_router.dart';
+import 'package:atly/presentation/screens/home_screen/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:fluttericon/zocial_icons.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -27,14 +30,14 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
+          SingleChildScrollView(
             child: Form(
               key: _formKey,
               child: Column(
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+                  const SizedBox(height: 100.0),
                   Image.asset(
                     'assets/icons/atly_splash_white_icon.png',
                     width: 93.5,
@@ -134,9 +137,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         const SizedBox(height: 16.0),
                         ElevatedButton(
                           onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              // Log the user in
-                            }
+                            context.go('/home');
+
+                            // if (_formKey.currentState!.validate()) {
+                            //   // Log the user in
+                            // }
                           },
                           style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.white,
