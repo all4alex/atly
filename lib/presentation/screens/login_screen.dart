@@ -1,6 +1,9 @@
+import 'package:atly/logic/cubit/login/cubit/login_cubit.dart';
 import 'package:atly/presentation/router/app_router.dart';
 import 'package:atly/presentation/screens/home_screen/home_screen.dart';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:fluttericon/zocial_icons.dart';
 import 'package:getwidget/getwidget.dart';
@@ -15,6 +18,34 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
+  String? email = '';
+  String? password = '';
+  late LoginCubit loginCubit;
+  @override
+  void didChangeDependencies() {
+    loginCubit = BlocProvider.of<LoginCubit>(context);
+    super.didChangeDependencies();
+  }
+
+  void showErrorMessage(BuildContext context) {
+    final snackBar = SnackBar(
+      /// need to set following properties for best effect of awesome_snackbar_content
+      elevation: 0,
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: Colors.transparent,
+      content: AwesomeSnackbarContent(
+        title: 'Opps!',
+        message: 'Incorrect email or password.',
+
+        /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
+        contentType: ContentType.failure,
+      ),
+    );
+
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(snackBar);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,6 +131,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             }
                             return null;
                           },
+                          onSaved: (newValue) => email = newValue,
                         ),
                         const SizedBox(height: 16.0),
                         TextFormField(
@@ -119,6 +151,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             }
                             return null;
                           },
+                          onSaved: (newValue) => password = newValue,
                         ),
                         const SizedBox(height: 10.0),
                         Container(
@@ -135,28 +168,44 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                         const SizedBox(height: 16.0),
-                        ElevatedButton(
-                          onPressed: () {
-                            context.go('/home');
-
-                            // if (_formKey.currentState!.validate()) {
-                            //   // Log the user in
-                            // }
+                        BlocListener<LoginCubit, LoginState>(
+                          listener: (context, state) {
+                            if (state is LoginSuccess) {
+                              context.go('/home');
+                            } else if (state is LoginFailed) {
+                              showErrorMessage(context);
+                            }
                           },
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              fixedSize: Size(screenSize.width, 50),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(50))),
-                          child: Text('Log In',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleMedium!
-                                  .copyWith(
-                                    fontFamily: 'Poppins',
-                                    color: Colors.blue,
-                                    fontWeight: FontWeight.bold,
-                                  )),
+                          child: BlocBuilder<LoginCubit, LoginState>(
+                            builder: (context, state) {
+                              return ElevatedButton(
+                                onPressed: () {
+                                  if (_formKey.currentState!.validate()) {
+                                    _formKey.currentState!.save();
+                                    loginCubit.loginWithEmailAndPassword(
+                                        email: email!, password: password!);
+                                  }
+                                },
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.white,
+                                    fixedSize: Size(screenSize.width, 50),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(50))),
+                                child: state is LoginLoading
+                                    ? const CircularProgressIndicator()
+                                    : Text('Log In',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleMedium!
+                                            .copyWith(
+                                              fontFamily: 'Poppins',
+                                              color: Colors.blue,
+                                              fontWeight: FontWeight.bold,
+                                            )),
+                              );
+                            },
+                          ),
                         ),
                       ],
                     ),
