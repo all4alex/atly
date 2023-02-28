@@ -15,12 +15,18 @@ class _HomeScreenState extends State<HomeScreen> {
   void initUser() async {
     await FirebaseChatCore.instance.createUserInFirestore(
       types.User(
-        firstName: 'John',
+        firstName: 'Alex',
         id: '123', // UID from Firebase Authentication
         imageUrl: 'https://i.pravatar.cc/300',
         lastName: 'Doe',
       ),
     );
+  }
+
+  @override
+  void initState() {
+    initUser();
+    super.initState();
   }
 
   @override
