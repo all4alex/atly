@@ -4,6 +4,7 @@ class AppColors {
   AppColors._();
   static const Color iconGrey = Color(0xff808080);
   static const Color iconBlue = Color(0xff2271D1);
+
   static const Color appScreenColor = Color(0xffECECEC);
 
   static const Color appLightGreen = Color(0xff39B54A);

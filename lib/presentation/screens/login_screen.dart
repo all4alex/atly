@@ -9,7 +9,7 @@ import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:fluttericon/zocial_icons.dart';
 import 'package:getwidget/getwidget.dart';
 
-import 'pages/home_screen.dart';
+import 'pages/message_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
