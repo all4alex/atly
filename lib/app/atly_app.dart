@@ -25,7 +25,7 @@ class AtlyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         locale: DevicePreview.locale(context),
         theme: ThemeData.light().copyWith(
-          scaffoldBackgroundColor: AppColors.appScreenBackgroundGrey,
+          scaffoldBackgroundColor: AppColors.appWhite,
         ),
         darkTheme: ThemeData.dark(),
         home: LoginScreen(),

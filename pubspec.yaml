@@ -19,7 +19,7 @@ dependencies:
   getwidget: ^3.0.1
   fluttericon: ^2.0.0
   flutter_signin_button: ^2.0.0
-  persistent_bottom_nav_bar_v2: ^4.0.3
+  persistent_bottom_nav_bar_v2: ^4.2.6
   device_preview: ^1.1.0
   font_awesome_flutter: ^9.1.0
   flutter_firebase_chat_core: ^1.6.4
@@ -48,6 +48,8 @@ dependencies:
   path_provider: ^2.0.11
   uuid: ^3.0.6
   modal_bottom_sheet: ^3.0.0-pre
+  gap: ^2.0.1
+  flutter_speed_dial: ^6.2.0
 
 dev_dependencies:
   flutter_test:

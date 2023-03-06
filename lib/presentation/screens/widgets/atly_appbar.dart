@@ -5,15 +5,21 @@ class AtlyAppbar extends StatelessWidget {
   const AtlyAppbar({
     super.key,
     required this.subtitle,
+    required this.onAction1,
+    required this.onAction2,
+    required this.onAction3,
   });
 
   final String subtitle;
+  final void Function() onAction1;
+  final void Function() onAction2;
+  final void Function() onAction3;
 
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Container(
-      color: AppColors.appScreenBackgroundGrey,
+      color: AppColors.appWhite,
       height: size.height * .15,
       child: Column(
         children: [
@@ -26,12 +32,11 @@ class AtlyAppbar extends StatelessWidget {
                 Row(
                   children: [
                     IconButton(
-                      icon: Icon(
-                        Icons.menu,
-                        color: AppColors.iconBlue,
-                      ),
-                      onPressed: () {},
-                    ),
+                        icon: Icon(
+                          Icons.menu,
+                          color: AppColors.iconBlue,
+                        ),
+                        onPressed: onAction1),
                     Container(
                         width: size.width * .15,
                         child: Image.asset('assets/icons/atly_text_logo.png')),
@@ -42,14 +47,14 @@ class AtlyAppbar extends StatelessWidget {
                     IconButton(
                       icon: Icon(Icons.search),
                       color: AppColors.iconBlue,
-                      onPressed: () {},
+                      onPressed: onAction2,
                     ),
                     IconButton(
                       icon: Icon(
                         Icons.chat_rounded,
                         color: AppColors.iconBlue,
                       ),
-                      onPressed: () {},
+                      onPressed: onAction3,
                     ),
                   ],
                 )

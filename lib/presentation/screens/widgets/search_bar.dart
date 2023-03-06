@@ -30,7 +30,6 @@ class SearchBar extends StatelessWidget {
         height: height,
         width: width,
         padding: EdgeInsets.only(left: 15, right: 15, bottom: 10),
-        color: color,
         alignment: Alignment.bottomCenter,
         child: Container(
             height: screenSize.height / 15,
@@ -60,7 +59,7 @@ class SearchBar extends StatelessWidget {
                     prefixIcon: Container(
                         child: Icon(Icons.search,
                             size: screenSize.height * 0.025,
-                            color: AppColors.appTextBlue)),
+                            color: AppColors.appBlue)),
                     suffixIcon: onTapSuffix != null
                         ? IconButton(
                             onPressed: () {

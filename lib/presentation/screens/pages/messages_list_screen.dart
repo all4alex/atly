@@ -62,8 +62,7 @@ class _MessageScreenState extends State<MessageListScreen> {
                               pushNewScreen(
                                 context,
                                 screen: MessageScreen(room: room),
-                                withNavBar:
-                                    true, // OPTIONAL VALUE. True by default.
+                                withNavBar: false,
                                 pageTransitionAnimation:
                                     PageTransitionAnimation.cupertino,
                               );
@@ -105,9 +104,6 @@ class _MessageScreenState extends State<MessageListScreen> {
               }
               return const CircularProgressIndicator();
             },
-          ),
-          AtlyAppbar(
-            subtitle: 'Messages',
           ),
         ],
       ),
