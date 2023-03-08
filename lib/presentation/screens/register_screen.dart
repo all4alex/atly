@@ -12,18 +12,18 @@ import 'package:getwidget/getwidget.dart';
 
 import 'pages/message_screen.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({Key? key}) : super(key: key);
   static const String routeName = '/login';
-  static const String screenName = 'LoginScreen';
+  static const String screenName = 'RegisterScreen';
   static ModalRoute<void> route() => MaterialPageRoute<void>(
-      builder: (context) => LoginScreen(),
+      builder: (context) => RegisterScreen(),
       settings: RouteSettings(name: routeName));
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<RegisterScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
   String? email = '';
   String? password = '';
@@ -275,57 +275,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               onPressed: () {},
                             ),
                           ],
-                        ),
-                        const SizedBox(height: 30),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('NEW HERE?',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleMedium!
-                                      .copyWith(
-                                        fontFamily: 'Poppins',
-                                        color: AppColors.appOriginalWhite,
-                                        fontWeight: FontWeight.bold,
-                                      )),
-                              const SizedBox(height: 20),
-                              BlocBuilder<LoginCubit, LoginState>(
-                                builder: (context, state) {
-                                  return ElevatedButton(
-                                    onPressed: () {
-                                      if (_formKey.currentState!.validate()) {
-                                        _formKey.currentState!.save();
-                                        loginCubit.loginWithEmailAndPassword(
-                                            email: email!, password: password!);
-                                      }
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.white,
-                                        fixedSize: Size(screenSize.width, 50),
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(50))),
-                                    child: state is LoginLoading
-                                        ? const CircularProgressIndicator()
-                                        : Text('Create Account',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .titleMedium!
-                                                .copyWith(
-                                                  fontFamily: 'Poppins',
-                                                  color: AppColors.appBlue,
-                                                  fontWeight: FontWeight.bold,
-                                                )),
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 30),
+                        )
                       ],
                     ),
                   ),
