@@ -7,7 +7,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'package:logger/logger.dart';
 import 'package:meta/meta.dart';
-import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
 part 'login_state.dart';
 
@@ -22,14 +21,7 @@ class LoginCubit extends Cubit<LoginState> {
       print(user);
       if (user != null) {
         await secureStorage.saveCurrentUser(user.toString());
-        await FirebaseChatCore.instance.createUserInFirestore(
-          types.User(
-            firstName: 'Alex',
-            id: user.uid, // UID from Firebase Authentication
-            imageUrl: 'https://i.pravatar.cc/300',
-            lastName: 'Tester',
-          ),
-        );
+
         emit(LoginSuccess(user: FirebaseAuth.instance.currentUser!));
       } else {
         emit(LoginCheckingAuthFailed());
@@ -48,19 +40,31 @@ class LoginCubit extends Cubit<LoginState> {
       final UserCredential credential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
       secureStorage.saveCurrentUser(credential.user.toString());
+      // final bool hasProfile = credential.user!.displayName != null;
 
-      await FirebaseChatCore.instance.createUserInFirestore(
-        types.User(
-          firstName: 'Alex',
-          id: credential.user!.uid, // UID from Firebase Authentication
-          imageUrl: 'https://i.pravatar.cc/300',
-          lastName: 'Tester',
-        ),
-      );
-      emit(LoginSuccess(user: credential.user!));
+      // if (1 > 1) {
+      //   emit(LoginSuccess(user: credential.user!));
+      // } else {
+      //   emit(LoginSuccessNoProfile(user: credential.user!));
+      // }
+      emit(LoginSuccessNoProfile(user: credential.user!));
     } on FirebaseAuthException catch (e) {
       Logger().e(e);
       emit(LoginFailed(errorMsg: '${e.message}'));
+    }
+  }
+
+  Future<void> logout() async {
+    emit(LogoutLoading());
+
+    try {
+      await FirebaseAuth.instance.signOut();
+      await secureStorage.removeAll();
+
+      emit(LogoutSuccess());
+    } on FirebaseAuthException catch (e) {
+      Logger().e(e);
+      emit(LogoutFailed());
     }
   }
 }

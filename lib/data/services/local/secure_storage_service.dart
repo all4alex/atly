@@ -11,4 +11,8 @@ class SecureStorage {
   Future<dynamic> getCurrentUser() async {
     return await _storage.read(key: 'currentUser');
   }
+
+  Future<dynamic> removeAll() async {
+    return await _storage.deleteAll();
+  }
 }

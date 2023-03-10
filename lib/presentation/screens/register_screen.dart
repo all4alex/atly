@@ -1,39 +1,46 @@
 import 'package:atly/app/app_colors.dart';
-import 'package:atly/logic/cubit/login/cubit/login_cubit.dart';
+import 'package:atly/app/app_strings.dart';
+import 'package:atly/data/models/user_profile_model.dart';
+import 'package:atly/logic/cubit/register/register_cubit.dart';
 import 'package:atly/main.dart';
 import 'package:atly/presentation/router/app_router.dart';
 import 'package:atly/presentation/screens/home_screen/nav_screen.dart';
+import 'package:atly/presentation/screens/setup_profile_screen.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:fluttericon/zocial_icons.dart';
+import 'package:gap/gap.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
 import 'pages/message_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
-  static const String routeName = '/login';
+  static const String routeName = '/register';
   static const String screenName = 'RegisterScreen';
   static ModalRoute<void> route() => MaterialPageRoute<void>(
       builder: (context) => RegisterScreen(),
       settings: RouteSettings(name: routeName));
   @override
-  State<RegisterScreen> createState() => _LoginScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _LoginScreenState extends State<RegisterScreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
   String? email = '';
   String? password = '';
-  late LoginCubit loginCubit;
+  late RegisterCubit registerCubit;
+  UserProfileModel? userProfileModel;
 
   @override
   void initState() {
     super.initState();
-    loginCubit = BlocProvider.of<LoginCubit>(context);
-    loginCubit.checkUserAuth();
+    registerCubit = BlocProvider.of<RegisterCubit>(context);
   }
 
   @override
@@ -41,7 +48,7 @@ class _LoginScreenState extends State<RegisterScreen> {
     super.didChangeDependencies();
   }
 
-  void showErrorMessage(BuildContext context) {
+  void showErrorMessage(BuildContext context, String errorMessage) {
     final snackBar = SnackBar(
       /// need to set following properties for best effect of awesome_snackbar_content
       elevation: 0,
@@ -49,10 +56,30 @@ class _LoginScreenState extends State<RegisterScreen> {
       backgroundColor: Colors.transparent,
       content: AwesomeSnackbarContent(
         title: 'Opps!',
-        message: 'Incorrect email or password.',
+        message: errorMessage,
 
         /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
         contentType: ContentType.failure,
+      ),
+    );
+
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(snackBar);
+  }
+
+  void showSuccessToast(BuildContext context, String message) {
+    final snackBar = SnackBar(
+      /// need to set following properties for best effect of awesome_snackbar_content
+      elevation: 0,
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: Colors.transparent,
+      content: AwesomeSnackbarContent(
+        title: 'Succes',
+        message: message,
+
+        /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
+        contentType: ContentType.success,
       ),
     );
 
@@ -75,20 +102,17 @@ class _LoginScreenState extends State<RegisterScreen> {
               ),
             ),
           ),
-          BlocListener<LoginCubit, LoginState>(
+          BlocListener<RegisterCubit, RegisterState>(
             listener: (context, state) {
-              if (state is LoginSuccess) {
-                Navigator.of(context, rootNavigator: true).pushReplacement(
-                    NavScreen.route(menuScreenContext: context));
-              } else if (state is LoginFailed) {
-                showErrorMessage(context);
+              if (state is RegisterSuccess) {
+                showSuccessToast(context, 'Account successfuly created.');
+                Navigator.of(context).pop();
+              } else if (state is RegisterFailed) {
+                showErrorMessage(context, state.error);
               }
             },
-            child: BlocBuilder<LoginCubit, LoginState>(
+            child: BlocBuilder<RegisterCubit, RegisterState>(
               builder: (context, state) {
-                if (state is LoginCheckingAuth) {
-                  return const Center(child: CircularProgressIndicator());
-                }
                 return SingleChildScrollView(
                   child: Form(
                     key: _formKey,
@@ -96,7 +120,7 @@ class _LoginScreenState extends State<RegisterScreen> {
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        const SizedBox(height: 100.0),
+                        Gap(50),
                         Image.asset(
                           'assets/icons/atly_splash_white_icon.png',
                           width: 93.5,
@@ -126,6 +150,7 @@ class _LoginScreenState extends State<RegisterScreen> {
                             ),
                           ],
                         ),
+                        Gap(30),
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 20),
                           child: Column(
@@ -134,7 +159,7 @@ class _LoginScreenState extends State<RegisterScreen> {
                                 alignment: Alignment.centerLeft,
                                 width: double.infinity,
                                 child: Text(
-                                  'Log In',
+                                  'CREATE ACCOUNT',
                                   style: Theme.of(context)
                                       .textTheme
                                       .titleMedium!
@@ -164,6 +189,25 @@ class _LoginScreenState extends State<RegisterScreen> {
                                 },
                                 onSaved: (newValue) => email = newValue,
                               ),
+                              // const SizedBox(height: 16.0),
+                              // TextFormField(
+                              //   decoration: InputDecoration(
+                              //     hintText: "Username",
+                              //     filled: true,
+                              //     fillColor: Colors.grey[200],
+                              //     border: OutlineInputBorder(
+                              //       borderRadius: BorderRadius.circular(30.0),
+                              //       borderSide: BorderSide.none,
+                              //     ),
+                              //   ),
+                              //   validator: (value) {
+                              //     if (value!.isEmpty) {
+                              //       return "Email can't be empty";
+                              //     }
+                              //     return null;
+                              //   },
+                              //   onSaved: (newValue) => email = newValue,
+                              // ),
                               const SizedBox(height: 16.0),
                               TextFormField(
                                 obscureText: true,
@@ -184,31 +228,38 @@ class _LoginScreenState extends State<RegisterScreen> {
                                 },
                                 onSaved: (newValue) => password = newValue,
                               ),
-                              const SizedBox(height: 10.0),
-                              Container(
-                                alignment: Alignment.centerRight,
-                                width: double.infinity,
-                                child: Text(
-                                  'Forgot password?',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall!
-                                      .copyWith(
-                                        fontFamily: 'Poppins',
-                                        color: Colors.white,
-                                        decoration: TextDecoration.underline,
-                                      ),
+                              const SizedBox(height: 16.0),
+                              TextFormField(
+                                obscureText: true,
+                                decoration: InputDecoration(
+                                  hintText: "Confirm Password",
+                                  filled: true,
+                                  fillColor: Colors.grey[200],
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(30.0),
+                                    borderSide: BorderSide.none,
+                                  ),
                                 ),
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return "Password can't be empty";
+                                  }
+                                  return null;
+                                },
+                                onSaved: (newValue) => password = newValue,
                               ),
                               const SizedBox(height: 16.0),
-                              BlocBuilder<LoginCubit, LoginState>(
+                              BlocBuilder<RegisterCubit, RegisterState>(
                                 builder: (context, state) {
                                   return ElevatedButton(
-                                    onPressed: () {
+                                    onPressed: () async {
                                       if (_formKey.currentState!.validate()) {
                                         _formKey.currentState!.save();
-                                        loginCubit.loginWithEmailAndPassword(
-                                            email: email!, password: password!);
+                                        registerCubit
+                                            .registerWithEmailAndPassword(
+                                          email: email!,
+                                          password: password!,
+                                        );
                                       }
                                     },
                                     style: ElevatedButton.styleFrom(
@@ -217,9 +268,9 @@ class _LoginScreenState extends State<RegisterScreen> {
                                         shape: RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(50))),
-                                    child: state is LoginLoading
+                                    child: state is RegisterLoding
                                         ? const CircularProgressIndicator()
-                                        : Text('Log In',
+                                        : Text(AppString.createAccount,
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .titleMedium!
@@ -248,6 +299,23 @@ class _LoginScreenState extends State<RegisterScreen> {
                           ),
                         ),
                         const SizedBox(height: 10.0),
+                        Container(
+                          alignment: Alignment.centerLeft,
+                          width: double.infinity,
+                          margin: EdgeInsets.only(left: 20),
+                          child: Text(
+                            'CONNECT WITH',
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium!
+                                .copyWith(
+                                  fontFamily: 'Poppins',
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                          ),
+                        ),
+                        Gap(10),
                         Column(
                           children: [
                             SignInButton(
@@ -275,7 +343,37 @@ class _LoginScreenState extends State<RegisterScreen> {
                               onPressed: () {},
                             ),
                           ],
-                        )
+                        ),
+                        Gap(30),
+                        InkWell(
+                          onTap: () => Navigator.of(context).pop(),
+                          child: Container(
+                            alignment: Alignment.center,
+                            width: double.infinity,
+                            margin: EdgeInsets.only(left: 15),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.arrow_back,
+                                  size: 13,
+                                  color: AppColors.appOriginalWhite,
+                                ),
+                                Text(
+                                  'Back to login',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall!
+                                      .copyWith(
+                                          fontFamily: 'Poppins',
+                                          decoration: TextDecoration.underline,
+                                          color: Colors.white),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Gap(30),
                       ],
                     ),
                   ),

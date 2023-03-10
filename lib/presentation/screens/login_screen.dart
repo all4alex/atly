@@ -1,44 +1,53 @@
 import 'package:atly/app/app_colors.dart';
-import 'package:atly/logic/cubit/login/cubit/login_cubit.dart';
+import 'package:atly/app/app_text.dart';
+import 'package:atly/logic/cubit/login/login_cubit.dart';
 import 'package:atly/main.dart';
 import 'package:atly/presentation/router/app_router.dart';
 import 'package:atly/presentation/screens/home_screen/nav_screen.dart';
+import 'package:atly/presentation/screens/setup_profile_screen.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:fluttericon/zocial_icons.dart';
+import 'package:gap/gap.dart';
 import 'package:getwidget/getwidget.dart';
 
 import 'pages/message_screen.dart';
+import 'register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
+
   static const String routeName = '/login';
   static const String screenName = 'LoginScreen';
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+
   static ModalRoute<void> route() => MaterialPageRoute<void>(
       builder: (context) => LoginScreen(),
       settings: RouteSettings(name: routeName));
-  @override
-  State<LoginScreen> createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _formKey = GlobalKey<FormState>();
   String? email = '';
-  String? password = '';
   late LoginCubit loginCubit;
+  String? password = '';
+
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+  }
 
   @override
   void initState() {
     super.initState();
     loginCubit = BlocProvider.of<LoginCubit>(context);
     loginCubit.checkUserAuth();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
   }
 
   void showErrorMessage(BuildContext context) {
@@ -65,76 +74,86 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
-      body: Stack(
-        children: [
-          Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage("assets/backgrounds/splash_cafe_bg.png"),
-                fit: BoxFit.cover,
-              ),
+      body: SingleChildScrollView(
+        child: Container(
+          padding: EdgeInsets.all(20),
+          height: screenSize.height,
+          width: screenSize.width,
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/backgrounds/splash_cafe_bg.png"),
+              fit: BoxFit.fill,
             ),
           ),
-          BlocListener<LoginCubit, LoginState>(
-            listener: (context, state) {
-              if (state is LoginSuccess) {
-                Navigator.of(context, rootNavigator: true).pushReplacement(
-                    NavScreen.route(menuScreenContext: context));
-              } else if (state is LoginFailed) {
-                showErrorMessage(context);
-              }
-            },
-            child: BlocBuilder<LoginCubit, LoginState>(
-              builder: (context, state) {
-                if (state is LoginCheckingAuth) {
-                  return const Center(child: CircularProgressIndicator());
+          child: Container(
+            alignment: Alignment.center,
+            padding: EdgeInsets.all(20),
+            decoration: BoxDecoration(
+                color: Color.fromARGB(68, 242, 242, 242),
+                border: Border.all(
+                  color: Colors.white70,
+                ),
+                borderRadius: BorderRadius.all(Radius.circular(20))),
+            child: BlocListener<LoginCubit, LoginState>(
+              listener: (context, state) {
+                if (state is LoginSuccess) {
+                  Navigator.of(context, rootNavigator: true).pushReplacement(
+                      NavScreen.route(menuScreenContext: context));
+                } else if (state is LoginSuccessNoProfile) {
+                  Navigator.of(context, rootNavigator: true)
+                      .pushReplacement(SetupProfileScreen.route());
+                } else if (state is LoginFailed) {
+                  showErrorMessage(context);
                 }
-                return SingleChildScrollView(
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        const SizedBox(height: 100.0),
-                        Image.asset(
-                          'assets/icons/atly_splash_white_icon.png',
-                          width: 93.5,
-                          height: 93.4,
-                          fit: BoxFit.cover,
-                        ),
-                        Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Welcome to',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleLarge!
-                                  .copyWith(
-                                    fontFamily: 'Poppins',
-                                    color: Colors.white,
-                                  ),
-                            ),
-                            Image.asset(
-                              'assets/icons/atly_splash_white_text_icon.png',
-                              width: 73.8,
-                              height: 50.2,
-                              fit: BoxFit.cover,
-                            ),
-                          ],
-                        ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Column(
+              },
+              child: BlocBuilder<LoginCubit, LoginState>(
+                builder: (context, state) {
+                  if (state is LoginCheckingAuth) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  return SingleChildScrollView(
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Image.asset(
+                            'assets/icons/atly_splash_white_icon.png',
+                            width: 93.5,
+                            height: 93.4,
+                            fit: BoxFit.cover,
+                          ),
+                          Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Welcome to',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleLarge!
+                                    .copyWith(
+                                      fontFamily: 'Poppins',
+                                      color: Colors.white,
+                                    ),
+                              ),
+                              Image.asset(
+                                'assets/icons/atly_splash_white_text_icon.png',
+                                width: 73.8,
+                                height: 50.2,
+                                fit: BoxFit.cover,
+                              ),
+                            ],
+                          ),
+                          Column(
                             children: [
                               Container(
                                 alignment: Alignment.centerLeft,
                                 width: double.infinity,
                                 child: Text(
-                                  'Log In',
+                                  'LOG IN',
                                   style: Theme.of(context)
                                       .textTheme
                                       .titleMedium!
@@ -233,53 +252,109 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ],
                           ),
-                        ),
-                        const SizedBox(height: 10.0),
-                        Container(
-                          alignment: Alignment.center,
-                          width: double.infinity,
-                          child: Text(
-                            'OR',
-                            style:
-                                Theme.of(context).textTheme.bodySmall!.copyWith(
-                                      fontFamily: 'Poppins',
-                                      color: Colors.white,
-                                    ),
+                          Gap(20),
+                          Container(
+                            alignment: Alignment.center,
+                            width: double.infinity,
+                            child: Text(
+                              'OR',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall!
+                                  .copyWith(
+                                    fontFamily: 'Poppins',
+                                    color: Colors.white,
+                                  ),
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 10.0),
-                        Column(
-                          children: [
-                            SignInButton(
-                              Buttons.Email,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(50)),
-                              onPressed: () {},
-                            ),
-                            SignInButton(
-                              Buttons.Google,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(50)),
-                              onPressed: () {},
-                            ),
-                            SignInButton(
-                              Buttons.Facebook,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(50)),
-                              onPressed: () {},
-                            ),
-                            SignInButton(
-                              Buttons.Apple,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(50)),
-                              onPressed: () {},
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 30),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Column(
+                          Gap(10),
+                          Container(
+                            width: double.infinity,
+                            alignment: Alignment.centerLeft,
+                            child: Text('CONNECT WITH',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleMedium!
+                                    .copyWith(
+                                      fontFamily: 'Poppins',
+                                      color: AppColors.appOriginalWhite,
+                                      fontWeight: FontWeight.bold,
+                                    )),
+                          ),
+                          Gap(10),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: SizedBox(
+                                      height: screenSize.height * .05,
+                                      child: GFButton(
+                                        onPressed: () {},
+                                        shape: GFButtonShape.pills,
+                                        color: AppColors.appWhite,
+                                        child: Text('Email',
+                                            style: AppText.body2.copyWith(
+                                                fontWeight: FontWeight.bold,
+                                                color: AppColors.iconGrey)),
+                                      ),
+                                    ),
+                                  ),
+                                  Gap(10),
+                                  Expanded(
+                                    child: SizedBox(
+                                      height: screenSize.height * .05,
+                                      child: GFButton(
+                                        onPressed: () {},
+                                        shape: GFButtonShape.pills,
+                                        color: Colors.red.shade700,
+                                        child: Text('Google+',
+                                            style: AppText.body2.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                            )),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Gap(10),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: SizedBox(
+                                      height: screenSize.height * .05,
+                                      child: GFButton(
+                                        onPressed: () {},
+                                        shape: GFButtonShape.pills,
+                                        child: Text('Facebook',
+                                            style: AppText.body2.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                            )),
+                                      ),
+                                    ),
+                                  ),
+                                  Gap(10),
+                                  Expanded(
+                                    child: SizedBox(
+                                      height: screenSize.height * .05,
+                                      child: GFButton(
+                                        onPressed: () {},
+                                        shape: GFButtonShape.pills,
+                                        color: AppColors.appWhite,
+                                        child: Text('Apple',
+                                            style: AppText.body2.copyWith(
+                                                fontWeight: FontWeight.bold,
+                                                color: AppColors.appBlack)),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                          const SizedBox(height: 30),
+                          Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text('NEW HERE?',
@@ -292,48 +367,38 @@ class _LoginScreenState extends State<LoginScreen> {
                                         fontWeight: FontWeight.bold,
                                       )),
                               const SizedBox(height: 20),
-                              BlocBuilder<LoginCubit, LoginState>(
-                                builder: (context, state) {
-                                  return ElevatedButton(
-                                    onPressed: () {
-                                      if (_formKey.currentState!.validate()) {
-                                        _formKey.currentState!.save();
-                                        loginCubit.loginWithEmailAndPassword(
-                                            email: email!, password: password!);
-                                      }
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.white,
-                                        fixedSize: Size(screenSize.width, 50),
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(50))),
-                                    child: state is LoginLoading
-                                        ? const CircularProgressIndicator()
-                                        : Text('Create Account',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .titleMedium!
-                                                .copyWith(
-                                                  fontFamily: 'Poppins',
-                                                  color: AppColors.appBlue,
-                                                  fontWeight: FontWeight.bold,
-                                                )),
-                                  );
+                              ElevatedButton(
+                                onPressed: () {
+                                  Navigator.of(context)
+                                      .push(RegisterScreen.route());
                                 },
-                              ),
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.white,
+                                    fixedSize: Size(screenSize.width, 50),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(50))),
+                                child: Text('Create Account',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium!
+                                        .copyWith(
+                                          fontFamily: 'Poppins',
+                                          color: AppColors.appBlue,
+                                          fontWeight: FontWeight.bold,
+                                        )),
+                              )
                             ],
                           ),
-                        ),
-                        const SizedBox(height: 30),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
           ),
-        ],
+        ),
       ),
     );
   }

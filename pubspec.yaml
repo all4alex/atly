@@ -50,6 +50,7 @@ dependencies:
   modal_bottom_sheet: ^3.0.0-pre
   gap: ^2.0.1
   flutter_speed_dial: ^6.2.0
+  formz: ^0.5.0+1
 
 dev_dependencies:
   flutter_test:

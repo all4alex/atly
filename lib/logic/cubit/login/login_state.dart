@@ -20,7 +20,18 @@ class LoginSuccess extends LoginState {
   final User user;
 }
 
+class LoginSuccessNoProfile extends LoginState {
+  LoginSuccessNoProfile({required this.user});
+  final User user;
+}
+
 class LoginFailed extends LoginState {
   LoginFailed({required this.errorMsg});
   final String errorMsg;
 }
+
+class LogoutLoading extends LoginState {}
+
+class LogoutSuccess extends LoginState {}
+
+class LogoutFailed extends LoginState {}
