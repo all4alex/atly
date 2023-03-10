@@ -87,7 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
           child: Container(
             alignment: Alignment.center,
-            padding: EdgeInsets.all(20),
+            padding: EdgeInsets.all(25),
             decoration: BoxDecoration(
                 color: Color.fromARGB(68, 242, 242, 242),
                 border: Border.all(
