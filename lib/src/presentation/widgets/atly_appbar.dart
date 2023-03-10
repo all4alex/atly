@@ -1,0 +1,82 @@
+import 'package:flutter/material.dart';
+
+import '../../app/app_colors.dart';
+
+class AtlyAppbar extends StatelessWidget {
+  const AtlyAppbar({
+    super.key,
+    required this.subtitle,
+    required this.onAction1,
+    required this.onAction2,
+    required this.onAction3,
+  });
+
+  final String subtitle;
+  final void Function() onAction1;
+  final void Function() onAction2;
+  final void Function() onAction3;
+
+  @override
+  Widget build(BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
+    return Container(
+      color: AppColors.appWhite,
+      height: size.height * .15,
+      child: Column(
+        children: [
+          SizedBox(
+            height: size.height * .1,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Row(
+                  children: [
+                    IconButton(
+                        icon: Icon(
+                          Icons.menu,
+                          color: AppColors.iconBlue,
+                        ),
+                        onPressed: onAction1),
+                    Container(
+                        width: size.width * .15,
+                        child: Image.asset('assets/icons/atly_text_logo.png')),
+                  ],
+                ),
+                Row(
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.search),
+                      color: AppColors.iconBlue,
+                      onPressed: onAction2,
+                    ),
+                    IconButton(
+                      icon: Icon(
+                        Icons.chat_rounded,
+                        color: AppColors.iconBlue,
+                      ),
+                      onPressed: onAction3,
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+          Container(
+            height: size.width * .05,
+            padding: EdgeInsets.only(left: 15),
+            alignment: Alignment.bottomLeft,
+            child: Text(
+              subtitle,
+              style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                    fontFamily: 'Poppins',
+                    color: AppColors.iconBlue,
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
