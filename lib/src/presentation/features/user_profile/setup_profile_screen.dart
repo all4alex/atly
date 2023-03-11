@@ -14,8 +14,11 @@ class SetupProfileScreen extends StatefulWidget {
   const SetupProfileScreen({Key? key}) : super(key: key);
   static const String routeName = '/setupProfile';
   static const String screenName = 'SetupProfileScreen';
-  static ModalRoute<dynamic> route() => MaterialPageRoute<dynamic>(
-      builder: (context) => SetupProfileScreen(),
+  static ModalRoute route() => MaterialPageRoute(
+      builder: (context) => BlocProvider(
+            create: (context) => ProfileCubit(),
+            child: SetupProfileScreen(),
+          ),
       settings: RouteSettings(name: routeName));
 
   @override

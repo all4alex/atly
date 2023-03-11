@@ -22,12 +22,12 @@ class LoginScreen extends StatefulWidget {
   static const String routeName = '/login';
   static const String screenName = 'LoginScreen';
 
-  @override
-  State<LoginScreen> createState() => _LoginScreenState();
-
-  static ModalRoute<void> route() => MaterialPageRoute<void>(
+  static ModalRoute route() => MaterialPageRoute(
       builder: (context) => LoginScreen(),
       settings: RouteSettings(name: routeName));
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
@@ -86,7 +86,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
           child: Container(
             alignment: Alignment.center,
-            padding: EdgeInsets.all(25),
+            padding: EdgeInsets.symmetric(horizontal: 25),
             decoration: BoxDecoration(
                 color: Color.fromARGB(68, 242, 242, 242),
                 border: Border.all(
@@ -98,9 +98,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 if (state is LoginSuccess) {
                   Navigator.of(context, rootNavigator: true).pushReplacement(
                       HomeScreen.route(menuScreenContext: context));
-                } else if (state is LoginSuccessNoProfile) {
-                  Navigator.of(context, rootNavigator: true)
-                      .pushReplacement(SetupProfileScreen.route());
                 } else if (state is LoginFailed) {
                   showErrorMessage(context);
                 }

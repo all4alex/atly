@@ -28,21 +28,17 @@ import '../pages/notification_screen.dart';
 import '../../widgets/atly_appbar.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key, required this.menuScreenContext})
-      : super(key: key);
+  const HomeScreen({Key? key}) : super(key: key);
 
   static const String routeName = '/main';
   static const String screenName = 'HomeScreen';
-
-  final BuildContext menuScreenContext;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 
   static ModalRoute<void> route({required BuildContext menuScreenContext}) =>
       MaterialPageRoute<void>(
-          builder: (context) =>
-              HomeScreen(menuScreenContext: menuScreenContext),
+          builder: (context) => HomeScreen(),
           settings: RouteSettings(name: routeName));
 }
 
@@ -55,6 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    loginCubit = BlocProvider.of<LoginCubit>(context);
     _controller = PersistentTabController(initialIndex: 0);
     loginCubit = BlocProvider.of<LoginCubit>(context);
   }
@@ -123,13 +120,22 @@ class _HomeScreenState extends State<HomeScreen> {
       ];
     }
 
-    return BlocListener<LoginCubit, LoginState>(
-      listener: (context, state) {
-        if (state is LogoutSuccess) {
-          Navigator.of(context, rootNavigator: true)
-              .pushReplacement(LoginScreen.route());
-        }
-      },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<LoginCubit, LoginState>(
+          listener: (context, state) {
+            if (state is LogoutSuccess) {
+              Navigator.of(context, rootNavigator: true)
+                  .pushReplacement(LoginScreen.route());
+            }
+          },
+        ),
+        BlocListener<LoginCubit, LoginState>(
+          listener: (context, state) {
+            // TODO: implement listener
+          },
+        ),
+      ],
       child: Scaffold(
         key: _key,
         drawerEnableOpenDragGesture: false,

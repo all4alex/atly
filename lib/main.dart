@@ -13,8 +13,6 @@ Future<void> main() async {
     DeviceOrientation.portraitDown,
   ]);
   await Firebase.initializeApp();
-  await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
-
   runApp(
     AtlyApp(),
   );

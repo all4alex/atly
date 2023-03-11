@@ -19,11 +19,17 @@ import 'cubit/register_cubit.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
+
   static const String routeName = '/register';
   static const String screenName = 'RegisterScreen';
-  static ModalRoute<void> route() => MaterialPageRoute<void>(
-      builder: (context) => RegisterScreen(),
-      settings: RouteSettings(name: routeName));
+
+  static ModalRoute route({Object? args}) => MaterialPageRoute(
+      builder: (context) => BlocProvider(
+            create: (context) => RegisterCubit(),
+            child: RegisterScreen(),
+          ),
+      settings: RouteSettings(name: routeName, arguments: args));
+
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
 }
