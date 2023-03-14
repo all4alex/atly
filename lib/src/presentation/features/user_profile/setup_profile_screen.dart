@@ -1,3 +1,4 @@
+import 'package:atly/src/data/services/api/user_service.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +8,6 @@ import 'package:gap/gap.dart';
 import '../../../app/app_colors.dart';
 import '../../../app/app_text.dart';
 import '../../../data/models/user_profile_model.dart';
-import '../home/home_screen.dart';
 import 'cubit/profile_cubit.dart';
 
 class SetupProfileScreen extends StatefulWidget {
@@ -15,10 +15,7 @@ class SetupProfileScreen extends StatefulWidget {
   static const String routeName = '/setupProfile';
   static const String screenName = 'SetupProfileScreen';
   static ModalRoute route() => MaterialPageRoute(
-      builder: (context) => BlocProvider(
-            create: (context) => ProfileCubit(),
-            child: SetupProfileScreen(),
-          ),
+      builder: (context) => SetupProfileScreen(),
       settings: RouteSettings(name: routeName));
 
   @override
@@ -63,8 +60,7 @@ class _SetupProfileScreenState extends State<SetupProfileScreen> {
     return BlocListener<ProfileCubit, ProfileState>(
       listener: (context, state) {
         if (state is ProfileSuccess) {
-          Navigator.of(context, rootNavigator: true)
-              .pushReplacement(HomeScreen.route(menuScreenContext: context));
+          Navigator.of(context).pop();
         } else if (state is ProfileFailed) {
           showErrorMessage(context);
         }
@@ -73,7 +69,7 @@ class _SetupProfileScreenState extends State<SetupProfileScreen> {
         backgroundColor: AppColors.appWhite,
         body: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: const EdgeInsets.all(35.0),
             child: Form(
               key: _formKey,
               child: Column(
@@ -122,7 +118,7 @@ class _SetupProfileScreenState extends State<SetupProfileScreen> {
                       return null;
                     },
                     onSaved: (newValue) =>
-                        userProfileModel.firstName = newValue,
+                        userProfileModel.copyWith(firstName: newValue),
                   ),
                   Gap(10),
                   TextFormField(
@@ -141,28 +137,30 @@ class _SetupProfileScreenState extends State<SetupProfileScreen> {
                       }
                       return null;
                     },
-                    onSaved: (newValue) => userProfileModel.lastName = newValue,
+                    onSaved: (newValue) =>
+                        userProfileModel.copyWith(lastName: newValue),
                   ),
                   Gap(10),
                   TextFormField(
-                      keyboardType: TextInputType.phone,
-                      decoration: InputDecoration(
-                        hintText: "Contact Number",
-                        filled: true,
-                        fillColor: Colors.grey[200],
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30.0),
-                          borderSide: BorderSide(color: AppColors.appGrey),
-                        ),
+                    keyboardType: TextInputType.phone,
+                    decoration: InputDecoration(
+                      hintText: "Contact Number",
+                      filled: true,
+                      fillColor: Colors.grey[200],
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                        borderSide: BorderSide(color: AppColors.appGrey),
                       ),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return "Contact Number can't be empty";
-                        }
-                        return null;
-                      },
-                      onSaved: (newValue) =>
-                          userProfileModel.contactNumber = newValue),
+                    ),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return "Contact Number can't be empty";
+                      }
+                      return null;
+                    },
+                    onSaved: (newValue) =>
+                        userProfileModel.copyWith(contactNumber: newValue),
+                  ),
                   Gap(10),
                   TextFormField(
                     keyboardType: TextInputType.phone,
@@ -188,47 +186,51 @@ class _SetupProfileScreenState extends State<SetupProfileScreen> {
                     //   }
                     //   return null;
                     // },
-                    onSaved: (newValue) => userProfileModel.bday = newValue,
+                    onSaved: (newValue) =>
+                        userProfileModel.copyWith(bday: newValue),
                   ),
                   Gap(10),
                   TextFormField(
-                      keyboardType: TextInputType.phone,
-                      decoration: InputDecoration(
-                        hintText: "Country",
-                        filled: true,
-                        fillColor: Colors.grey[200],
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30.0),
-                          borderSide: BorderSide(color: AppColors.appGrey),
-                        ),
+                    keyboardType: TextInputType.phone,
+                    decoration: InputDecoration(
+                      hintText: "Country",
+                      filled: true,
+                      fillColor: Colors.grey[200],
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                        borderSide: BorderSide(color: AppColors.appGrey),
                       ),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return "Country can't be empty";
-                        }
-                        return null;
-                      },
-                      onSaved: (newValue) =>
-                          userProfileModel.country = newValue),
+                    ),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return "Country can't be empty";
+                      }
+                      return null;
+                    },
+                    onSaved: (newValue) =>
+                        userProfileModel.copyWith(country: newValue),
+                  ),
                   Gap(10),
                   TextFormField(
-                      keyboardType: TextInputType.phone,
-                      decoration: InputDecoration(
-                        hintText: "City",
-                        filled: true,
-                        fillColor: Colors.grey[200],
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30.0),
-                          borderSide: BorderSide(color: AppColors.appGrey),
-                        ),
+                    keyboardType: TextInputType.phone,
+                    decoration: InputDecoration(
+                      hintText: "City",
+                      filled: true,
+                      fillColor: Colors.grey[200],
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                        borderSide: BorderSide(color: AppColors.appGrey),
                       ),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return "City can't be empty";
-                        }
-                        return null;
-                      },
-                      onSaved: (newValue) => userProfileModel.city = newValue),
+                    ),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return "City can't be empty";
+                      }
+                      return null;
+                    },
+                    onSaved: (newValue) =>
+                        userProfileModel.copyWith(city: newValue),
+                  ),
                   Gap(20),
                   ElevatedButton(
                     onPressed: () {

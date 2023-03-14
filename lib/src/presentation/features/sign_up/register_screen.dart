@@ -1,4 +1,5 @@
 import 'package:atly/main.dart';
+import 'package:atly/src/data/services/api/user_service.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +26,7 @@ class RegisterScreen extends StatefulWidget {
 
   static ModalRoute route({Object? args}) => MaterialPageRoute(
       builder: (context) => BlocProvider(
-            create: (context) => RegisterCubit(),
+            create: (context) => RegisterCubit(userService: UserServiceImpl()),
             child: RegisterScreen(),
           ),
       settings: RouteSettings(name: routeName, arguments: args));

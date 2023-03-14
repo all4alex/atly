@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:atly/main.dart';
 import 'package:atly/src/app/app_strings.dart';
 import 'package:atly/src/app/app_text.dart';
+import 'package:atly/src/data/services/api/user_service.dart';
 import 'package:atly/src/presentation/features/login/cubit/login_cubit.dart';
 import 'package:atly/src/presentation/features/login/login_screen.dart';
 import 'package:atly/src/presentation/features/pages/callendar_screen.dart';
@@ -10,6 +11,8 @@ import 'package:atly/src/presentation/features/pages/dashboard_screen.dart';
 import 'package:atly/src/presentation/features/pages/messages_list_screen.dart';
 import 'package:atly/src/presentation/features/pages/modals/bottom_modal/add_message_modal.dart';
 import 'package:atly/src/presentation/features/pages/modals/bottom_modal/nav_add_modal.dart';
+import 'package:atly/src/presentation/features/user_profile/cubit/profile_cubit.dart';
+import 'package:atly/src/presentation/features/user_profile/setup_profile_screen.dart';
 import 'package:atly/src/presentation/widgets/nav_speed_dial.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -38,7 +41,18 @@ class HomeScreen extends StatefulWidget {
 
   static ModalRoute<void> route({required BuildContext menuScreenContext}) =>
       MaterialPageRoute<void>(
-          builder: (context) => HomeScreen(),
+          builder: (context) => MultiBlocProvider(
+                providers: [
+                  BlocProvider(
+                    create: (context) => LoginCubit(),
+                  ),
+                  BlocProvider(
+                    create: (context) =>
+                        ProfileCubit(userService: UserServiceImpl()),
+                  ),
+                ],
+                child: HomeScreen(),
+              ),
           settings: RouteSettings(name: routeName));
 }
 
@@ -47,13 +61,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   late PersistentTabController _controller;
   final GlobalKey<ScaffoldState> _key = GlobalKey();
-  late LoginCubit loginCubit;
+  late ProfileCubit profileCubit;
   @override
   void initState() {
     super.initState();
-    loginCubit = BlocProvider.of<LoginCubit>(context);
     _controller = PersistentTabController(initialIndex: 0);
-    loginCubit = BlocProvider.of<LoginCubit>(context);
+    profileCubit = BlocProvider.of<ProfileCubit>(context);
+    profileCubit.getUserProfile();
   }
 
   @override
@@ -130,9 +144,20 @@ class _HomeScreenState extends State<HomeScreen> {
             }
           },
         ),
-        BlocListener<LoginCubit, LoginState>(
+        BlocListener<ProfileCubit, ProfileState>(
           listener: (context, state) {
-            // TODO: implement listener
+            if (state is ProfileFailed) {
+              pushNewScreenWithRouteSettings(
+                context,
+                settings: RouteSettings(name: SetupProfileScreen.routeName),
+                screen: BlocProvider.value(
+                  value: profileCubit,
+                  child: SetupProfileScreen(),
+                ),
+                withNavBar: false,
+                pageTransitionAnimation: PageTransitionAnimation.cupertino,
+              );
+            }
           },
         ),
       ],
@@ -239,7 +264,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 color: AppColors.appPink,
                               )),
                           onTap: () {
-                            loginCubit.logout();
+                            context.read<LoginCubit>().logout();
                           },
                         );
                       },

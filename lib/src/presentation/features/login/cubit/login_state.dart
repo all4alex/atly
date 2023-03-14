@@ -35,3 +35,9 @@ class LogoutLoading extends LoginState {}
 class LogoutSuccess extends LoginState {}
 
 class LogoutFailed extends LoginState {}
+
+class CheckProfileLoading extends LoginState {}
+
+class CheckProfileSuccess extends LoginState {}
+
+class CheckProfileFailed extends LoginState {}

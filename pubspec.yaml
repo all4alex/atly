@@ -23,6 +23,13 @@ dependencies:
   firebase_core: ^2.7.1
   firebase_messaging: ^14.2.5
   firebase_storage: ^11.0.14
+  firebase_ui_auth: ^1.1.16
+  firebase_ui_localizations: ^1.2.0
+  firebase_ui_oauth: ^1.1.16
+  firebase_ui_oauth_apple: ^1.0.23
+  firebase_ui_oauth_facebook: ^1.0.23
+  firebase_ui_oauth_google: ^1.0.23
+  firebase_ui_oauth_twitter: ^1.0.23
   flutter:
     sdk: flutter
   flutter_bloc: ^8.1.1
@@ -33,6 +40,7 @@ dependencies:
   flutter_secure_storage: ^8.0.0
   flutter_signin_button: ^2.0.0
   flutter_speed_dial: ^6.2.0
+  flutter_svg: ^1.0.0
   flutter_swipe_action_cell: ^3.1.0
   fluttericon: ^2.0.0
   font_awesome_flutter: ^9.1.0
@@ -52,26 +60,19 @@ dependencies:
   open_filex: ^4.2.2
   path_provider: ^2.0.11
   persistent_bottom_nav_bar_v2: ^4.2.6
+  shared_preferences: ^2.0.18
   stream_transform: ^2.1.0
   uuid: ^3.0.6
-  flutter_svg: ^1.0.0
-  firebase_ui_auth: ^1.1.16
-  firebase_ui_localizations: ^1.2.0
-  firebase_ui_oauth: ^1.1.16
-  firebase_ui_oauth_apple: ^1.0.23
-  firebase_ui_oauth_facebook: ^1.0.23
-  firebase_ui_oauth_google: ^1.0.23
-  firebase_ui_oauth_twitter: ^1.0.23
 
 dev_dependencies:
+  flutter_facebook_auth: ^4.4.1
   flutter_launcher_icons: ^0.11.0
   flutter_lints: ^2.0.0
-  google_sign_in: ^6.0.1
   flutter_native_splash: ^2.2.16
-  flutter_facebook_auth: ^4.4.1
 
   flutter_test:
     sdk: flutter
+  google_sign_in: ^6.0.1
 
 # The following section is specific to Flutter packages.
 flutter:
