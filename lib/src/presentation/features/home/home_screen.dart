@@ -26,6 +26,7 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 
 import '../../../app/app_colors.dart';
+import '../../widgets/atly_appbar_subtitle.dart';
 import '../pages/add_nav_screen.dart';
 import '../pages/notification_screen.dart';
 import '../../widgets/atly_appbar.dart';
@@ -315,7 +316,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   .style15, // Choose the nav bar style with this property.
             ),
             AtlyAppbar(
-              subtitle: 'Messages',
               onAction1: () {
                 _key.currentState!.openDrawer();
 

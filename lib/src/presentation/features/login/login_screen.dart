@@ -19,7 +19,7 @@ import 'cubit/login_cubit.dart';
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
-  static const String routeName = '/login';
+  static const String routeName = '/';
   static const String screenName = 'LoginScreen';
 
   static ModalRoute route() => MaterialPageRoute(
@@ -364,9 +364,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                       )),
                               const SizedBox(height: 20),
                               ElevatedButton(
-                                onPressed: () {
-                                  Navigator.of(context)
-                                      .push(RegisterScreen.route());
+                                onPressed: () async {
+                                  await Navigator.of(context)
+                                      .push(RegisterScreen.route())
+                                      .then((value) {
+                                    if (value != null) {
+                                      loginCubit.checkUserAuth();
+                                    }
+                                  });
                                 },
                                 style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.white,

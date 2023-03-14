@@ -59,7 +59,7 @@ class _SetupProfileScreenState extends State<SetupProfileScreen> {
 
     return BlocListener<ProfileCubit, ProfileState>(
       listener: (context, state) {
-        if (state is ProfileSuccess) {
+        if (state is SaveProfileSuccess) {
           Navigator.of(context).pop();
         } else if (state is ProfileFailed) {
           showErrorMessage(context);
@@ -232,23 +232,31 @@ class _SetupProfileScreenState extends State<SetupProfileScreen> {
                         userProfileModel.copyWith(city: newValue),
                   ),
                   Gap(20),
-                  ElevatedButton(
-                    onPressed: () {
-                      profileCubit.saveUserProfile(
-                          userProfileModel: userProfileModel);
+                  BlocBuilder<ProfileCubit, ProfileState>(
+                    builder: (context, state) {
+                      return ElevatedButton(
+                        onPressed: () {
+                          profileCubit.saveUserProfile(
+                              userProfileModel: userProfileModel);
+                        },
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.appBlue,
+                            fixedSize: Size(size.width, 50),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50))),
+                        child: state is SaveProfileLoading
+                            ? const CircularProgressIndicator()
+                            : Text('Create Account',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleMedium!
+                                    .copyWith(
+                                      fontFamily: 'Poppins',
+                                      color: AppColors.appOriginalWhite,
+                                      fontWeight: FontWeight.bold,
+                                    )),
+                      );
                     },
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.appBlue,
-                        fixedSize: Size(size.width, 50),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(50))),
-                    child: Text('Create Account',
-                        style:
-                            Theme.of(context).textTheme.titleMedium!.copyWith(
-                                  fontFamily: 'Poppins',
-                                  color: AppColors.appOriginalWhite,
-                                  fontWeight: FontWeight.bold,
-                                )),
                   )
                 ],
               ),

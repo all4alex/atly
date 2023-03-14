@@ -6,6 +6,8 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../../../../data/services/local/secure_storage_service.dart';
+
 part 'register_state.dart';
 
 class RegisterCubit extends Cubit<RegisterState> {
@@ -21,8 +23,7 @@ class RegisterCubit extends Cubit<RegisterState> {
 
       final UserCredential credential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
-      await userService.addUserProfile(
-          userProfileModel: UserProfileModel(), id: credential.user!.uid);
+
       emit(RegisterSuccess(userCredential: credential));
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {

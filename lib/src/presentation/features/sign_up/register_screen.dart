@@ -121,7 +121,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 listener: (context, state) {
                   if (state is RegisterSuccess) {
                     showSuccessToast(context, 'Account successfuly created.');
-                    Navigator.of(context).pop();
+                    Navigator.of(context).pop(state.userCredential);
                   } else if (state is RegisterFailed) {
                     showErrorMessage(context, state.error);
                   }
