@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:atly/src/app/app_colors.dart';
+import 'package:atly/src/app/app_text.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -36,11 +37,11 @@ class _MessageScreenState extends State<MessageScreen> {
     final Size screenSize = MediaQuery.of(context).size;
     return Material(
       child: SizedBox(
-        height: MediaQuery.of(context).size.height * .8,
+        height: MediaQuery.of(context).size.height * .85,
         child: Column(
           children: [
             Container(
-              height: MediaQuery.of(context).size.height * .1,
+              height: MediaQuery.of(context).size.height * .08,
               color: AppColors.appOriginalWhite,
               child: ListTile(
                 leading: buildAvatar(
@@ -50,7 +51,7 @@ class _MessageScreenState extends State<MessageScreen> {
                   getChatTitle(widget.room),
                   style: Theme.of(context).textTheme.titleSmall!.copyWith(
                         fontFamily: 'Poppins',
-                        color: Colors.black,
+                        color: AppColors.appBlue,
                       ),
                 ),
                 subtitle: Text(
@@ -64,31 +65,38 @@ class _MessageScreenState extends State<MessageScreen> {
                     IconButton(onPressed: () {}, icon: Icon(Icons.more_horiz)),
               ),
             ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * .7,
-              child: StreamBuilder<types.Room>(
-                initialData: widget.room,
-                stream: FirebaseChatCore.instance.room(widget.room.id),
-                builder: (context, snapshot) =>
-                    StreamBuilder<List<types.Message>>(
-                  initialData: const [],
-                  stream: FirebaseChatCore.instance.messages(snapshot.data!),
-                  builder: (context, snapshot) => Chat(
-                    showUserAvatars: true,
-                    showUserNames: true,
-                    isAttachmentUploading: _isAttachmentUploading,
-                    messages: snapshot.data ?? [],
-                    onAttachmentPressed: _handleAtachmentPressed,
-                    onMessageTap: _handleMessageTap,
-                    onPreviewDataFetched: _handlePreviewDataFetched,
-                    onSendPressed: _handleSendPressed,
-                    theme: DefaultChatTheme(
-                      inputBackgroundColor: AppColors.appBlue,
-                      messageBorderRadius: 30,
-                      backgroundColor: AppColors.appOriginalWhite,
-                    ),
-                    user: types.User(
-                      id: FirebaseChatCore.instance.firebaseUser?.uid ?? '',
+            Divider(
+              thickness: 2,
+            ),
+            Expanded(
+              child: Container(
+                color: AppColors.appGrey,
+                child: StreamBuilder<types.Room>(
+                  initialData: widget.room,
+                  stream: FirebaseChatCore.instance.room(widget.room.id),
+                  builder: (context, snapshot) =>
+                      StreamBuilder<List<types.Message>>(
+                    initialData: const [],
+                    stream: FirebaseChatCore.instance.messages(snapshot.data!),
+                    builder: (context, snapshot) => Chat(
+                      showUserAvatars: true,
+                      isAttachmentUploading: _isAttachmentUploading,
+                      messages: snapshot.data ?? [],
+                      onAttachmentPressed: _handleAtachmentPressed,
+                      onMessageTap: _handleMessageTap,
+                      onPreviewDataFetched: _handlePreviewDataFetched,
+                      onSendPressed: _handleSendPressed,
+                      theme: DefaultChatTheme(
+                          inputBackgroundColor: AppColors.appBlack,
+                          primaryColor: AppColors.appBlue,
+                          secondaryColor: AppColors.appWhite,
+                          backgroundColor: AppColors.appOriginalWhite,
+                          inputContainerDecoration: BoxDecoration(),
+                          receivedMessageBodyTextStyle: AppText.body2
+                              .copyWith(color: AppColors.iconGrey)),
+                      user: types.User(
+                        id: FirebaseChatCore.instance.firebaseUser?.uid ?? '',
+                      ),
                     ),
                   ),
                 ),

@@ -61,7 +61,7 @@ class _MessageScreenState extends State<MessageListScreen> {
                               context: context,
                               useRootNavigator: true,
                               overlayStyle: SystemUiOverlayStyle(),
-                              backgroundColor: Colors.transparent,
+                              backgroundColor: Colors.red,
                               builder: (context) => MessageScreen(room: room));
                         },
                         child: ListTile(

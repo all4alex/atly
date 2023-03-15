@@ -43,7 +43,6 @@ Widget buildAvatar(types.Room room) {
   final name = room.name ?? '';
 
   return Container(
-    margin: const EdgeInsets.only(right: 16),
     child: CircleAvatar(
       backgroundColor: hasImage ? AppColors.appOrange : color,
       backgroundImage: hasImage
