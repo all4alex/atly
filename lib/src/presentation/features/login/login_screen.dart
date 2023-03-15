@@ -369,7 +369,29 @@ class _LoginScreenState extends State<LoginScreen> {
                                       .push(RegisterScreen.route())
                                       .then((value) {
                                     if (value != null) {
-                                      loginCubit.checkUserAuth();
+                                      showDialog<String>(
+                                        context: context,
+                                        builder: (BuildContext context) =>
+                                            AlertDialog(
+                                          title: const Text('Account Created'),
+                                          content: const Text(
+                                              'Your account has been successfully created. Proceed to dashboard?'),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              onPressed: () => Navigator.pop(
+                                                  context, 'Later'),
+                                              child: const Text('Later'),
+                                            ),
+                                            TextButton(
+                                              onPressed: () {
+                                                loginCubit.checkUserAuth();
+                                                Navigator.pop(context, 'OK');
+                                              },
+                                              child: const Text('OK'),
+                                            ),
+                                          ],
+                                        ),
+                                      );
                                     }
                                   });
                                 },

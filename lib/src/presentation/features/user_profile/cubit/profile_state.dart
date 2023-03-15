@@ -23,6 +23,11 @@ class ProfileFailed extends ProfileState {}
 
 class SaveProfileLoading extends ProfileState {}
 
-class SaveProfileSuccess extends ProfileState {}
+class SaveProfileSuccess extends ProfileState {
+  final UserProfileModel userProfileModel;
+  SaveProfileSuccess({
+    required this.userProfileModel,
+  });
+}
 
 class SaveProfileFailed extends ProfileState {}

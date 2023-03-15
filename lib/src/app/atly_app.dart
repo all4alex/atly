@@ -36,43 +36,29 @@ class _AtlyAppState extends State<AtlyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        FocusScopeNode currentFocus = FocusScope.of(context);
-
-        if (!currentFocus.hasPrimaryFocus) {
-          currentFocus.unfocus();
-        }
-      },
-      child: StreamBuilder<User?>(
-          stream: FirebaseAuth.instance.authStateChanges(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              // LocalStorage().updateSession(user: snapshot.data);
-              currentUser = snapshot.data;
-            }
-
-            return MaterialApp(
-              title: 'Flutter Demo',
-              debugShowCheckedModeBanner: false,
-              locale: DevicePreview.locale(context),
-              theme: ThemeData.light().copyWith(
-                scaffoldBackgroundColor: AppColors.appWhite,
-              ),
-              darkTheme: ThemeData.dark(),
-              routes: {
-                '/': (context) => BlocProvider.value(
-                      value: _loginCubit,
-                      child: LoginScreen(),
-                    ),
-                '/signup': (context) => BlocProvider.value(
-                      value: _registerCubit,
-                      child: RegisterScreen(),
-                    ),
-              },
-            );
-          }),
-    );
+    return StreamBuilder<User?>(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            // LocalStorage().updateSession(user: snapshot.data);
+            currentUser = snapshot.data;
+          }
+          return MaterialApp(
+            title: 'Atly',
+            debugShowCheckedModeBanner: false,
+            locale: DevicePreview.locale(context),
+            routes: {
+              '/': (context) => BlocProvider.value(
+                    value: _loginCubit,
+                    child: LoginScreen(),
+                  ),
+              '/signup': (context) => BlocProvider.value(
+                    value: _registerCubit,
+                    child: RegisterScreen(),
+                  ),
+            },
+          );
+        });
   }
 
   @override

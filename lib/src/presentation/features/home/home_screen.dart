@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:atly/main.dart';
 import 'package:atly/src/app/app_strings.dart';
 import 'package:atly/src/app/app_text.dart';
+import 'package:atly/src/data/models/user_profile_model.dart';
 import 'package:atly/src/data/services/api/user_service.dart';
 import 'package:atly/src/presentation/features/login/cubit/login_cubit.dart';
 import 'package:atly/src/presentation/features/login/login_screen.dart';
@@ -13,6 +14,7 @@ import 'package:atly/src/presentation/features/pages/modals/bottom_modal/add_mes
 import 'package:atly/src/presentation/features/pages/modals/bottom_modal/nav_add_modal.dart';
 import 'package:atly/src/presentation/features/user_profile/cubit/profile_cubit.dart';
 import 'package:atly/src/presentation/features/user_profile/setup_profile_screen.dart';
+import 'package:atly/src/presentation/widgets/cubit/appbar_subtitle_cubit.dart';
 import 'package:atly/src/presentation/widgets/nav_speed_dial.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -27,6 +29,7 @@ import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 
 import '../../../app/app_colors.dart';
 import '../../widgets/atly_appbar_subtitle.dart';
+import '../../widgets/bx_scaffold.dart';
 import '../pages/add_nav_screen.dart';
 import '../pages/notification_screen.dart';
 import '../../widgets/atly_appbar.dart';
@@ -51,6 +54,9 @@ class HomeScreen extends StatefulWidget {
                     create: (context) =>
                         ProfileCubit(userService: UserServiceImpl()),
                   ),
+                  BlocProvider(
+                    create: (context) => AppbarSubtitleCubit(),
+                  ),
                 ],
                 child: HomeScreen(),
               ),
@@ -59,10 +65,11 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   BuildContext? testContext;
-
+  UserProfileModel userProfileModel = UserProfileModel();
   late PersistentTabController _controller;
   final GlobalKey<ScaffoldState> _key = GlobalKey();
   late ProfileCubit profileCubit;
+  String appBarSubtitle = '';
   @override
   void initState() {
     super.initState();
@@ -123,12 +130,12 @@ class _HomeScreenState extends State<HomeScreen> {
             // )
             ),
         PersistentBottomNavBarItem(
-          icon: Icon(FontAwesomeIcons.calendar),
+          icon: Icon(FontAwesomeIcons.calendarCheck),
           activeColorPrimary: AppColors.iconBlue,
           inactiveColorPrimary: AppColors.iconGrey,
         ),
         PersistentBottomNavBarItem(
-          icon: Icon(FontAwesomeIcons.userCircle),
+          icon: Icon(FontAwesomeIcons.solidBell),
           activeColorPrimary: AppColors.iconBlue,
           inactiveColorPrimary: AppColors.iconGrey,
         ),
@@ -159,174 +166,222 @@ class _HomeScreenState extends State<HomeScreen> {
                 pageTransitionAnimation: PageTransitionAnimation.cupertino,
               );
             }
+            if (state is SaveProfileSuccess) {
+              profileCubit.getUserProfile();
+            }
           },
         ),
       ],
       child: Scaffold(
-        key: _key,
-        drawerEnableOpenDragGesture: false,
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: Padding(
-          padding: const EdgeInsets.only(bottom: 5),
-          child: NavSpeedDial(
-            onBlast: () {},
-            onEvent: () {},
-            onMessage: () {
-              showCupertinoModalBottomSheet(
-                  context: context,
-                  useRootNavigator: true,
-                  overlayStyle: SystemUiOverlayStyle(),
-                  backgroundColor: Colors.transparent,
-                  builder: (context) => AddMessageModal());
-            },
-            onPitch: () {},
-            onToss: () {},
+          key: _key,
+          backgroundColor: AppColors.appBlue,
+          drawerEnableOpenDragGesture: false,
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerFloat,
+          floatingActionButton: Padding(
+            padding: const EdgeInsets.only(bottom: 5),
+            child: NavSpeedDial(
+              onBlast: () {},
+              onEvent: () {},
+              onMessage: () {
+                showCupertinoModalBottomSheet(
+                    context: context,
+                    useRootNavigator: true,
+                    overlayStyle: SystemUiOverlayStyle(),
+                    backgroundColor: Colors.transparent,
+                    builder: (context) => AddMessageModal());
+              },
+              onPitch: () {},
+              onToss: () {},
+            ),
           ),
-        ),
-        drawer: GFDrawer(
-          child: Column(
-            children: <Widget>[
-              Container(
-                alignment: Alignment.topCenter,
-                height: size.height * .35,
-                child: Column(
-                  children: [
-                    Gap(40),
-                    Image.asset(
-                      'assets/icons/atly_text_logo.png',
-                      height: size.height * .04,
-                      fit: BoxFit.fitHeight,
-                    ),
-                    Gap(10),
-                    CircleAvatar(
-                      backgroundColor: Colors.transparent,
-                      backgroundImage: CachedNetworkImageProvider(
-                          'https://i.pravatar.cc/300'),
-                      radius: 30,
-                    ),
-                    Gap(10),
-                    Text(
-                      'Name Name',
-                      style: AppText.subtitle1
-                          .copyWith(fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      'Name Name',
-                      style: AppText.caption.copyWith(color: AppColors.appBlue),
-                    ),
-                    Gap(15),
-                    SizedBox(
-                      height: 25,
-                      child: ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.appBlue,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(50))),
-                        child: Text(
-                          AppString.generateQr,
-                          style: AppText.button.copyWith(fontSize: 10),
+          drawer: GFDrawer(
+            child: BlocBuilder<ProfileCubit, ProfileState>(
+                builder: (context, state) {
+              if (state is ProfileSuccess) {
+                userProfileModel = state.userProfileModel;
+              }
+              return Column(
+                children: <Widget>[
+                  Container(
+                    alignment: Alignment.topCenter,
+                    height: size.height * .35,
+                    child: Column(
+                      children: [
+                        Gap(40),
+                        Image.asset(
+                          'assets/icons/atly_text_logo.png',
+                          height: size.height * .04,
+                          fit: BoxFit.fitHeight,
                         ),
-                      ),
+                        Gap(10),
+                        CircleAvatar(
+                          backgroundColor: Colors.transparent,
+                          backgroundImage: CachedNetworkImageProvider(
+                              'https://i.pravatar.cc/300'),
+                          radius: 30,
+                        ),
+                        Gap(10),
+                        Text(
+                          '${userProfileModel.firstName} ${userProfileModel.lastName}',
+                          style: AppText.subtitle1
+                              .copyWith(fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          '${userProfileModel.contactNumber}',
+                          style: AppText.caption
+                              .copyWith(color: AppColors.appBlue),
+                        ),
+                        Gap(15),
+                        SizedBox(
+                          height: 25,
+                          child: ElevatedButton(
+                            onPressed: () {},
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.appBlue,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(50))),
+                            child: Text(
+                              AppString.generateQr,
+                              style: AppText.button.copyWith(fontSize: 10),
+                            ),
+                          ),
+                        ),
+                        Gap(20),
+                      ],
                     ),
-                    Gap(20),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    ListTile(
-                      title: Text(AppString.accountsAndProfile,
-                          style: AppText.subtitle2.copyWith(
-                            color: AppColors.appGrey,
-                          )),
-                      onTap: null,
-                    ),
-                    ListTile(
-                      title: Text(AppString.settings,
-                          style: AppText.subtitle2.copyWith(
-                            color: AppColors.appGrey,
-                          )),
-                      onTap: null,
-                    ),
-                    Gap(20),
-                    BlocBuilder<LoginCubit, LoginState>(
-                      builder: (context, state) {
-                        if (state is LogoutLoading) {
-                          return CircularProgressIndicator();
-                        }
-                        return ListTile(
-                          title: Text(AppString.logout,
+                  ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        ListTile(
+                          title: Text(AppString.accountsAndProfile,
                               style: AppText.subtitle2.copyWith(
-                                decoration: TextDecoration.underline,
-                                color: AppColors.appPink,
+                                color: AppColors.appGrey,
                               )),
-                          onTap: () {
-                            context.read<LoginCubit>().logout();
+                          onTap: null,
+                        ),
+                        ListTile(
+                          title: Text(AppString.settings,
+                              style: AppText.subtitle2.copyWith(
+                                color: AppColors.appGrey,
+                              )),
+                          onTap: null,
+                        ),
+                        Gap(20),
+                        BlocBuilder<LoginCubit, LoginState>(
+                          builder: (context, state) {
+                            if (state is LogoutLoading) {
+                              return CircularProgressIndicator();
+                            }
+                            return ListTile(
+                              title: Text(AppString.logout,
+                                  style: AppText.subtitle2.copyWith(
+                                    decoration: TextDecoration.underline,
+                                    color: AppColors.appPink,
+                                  )),
+                              onTap: () {
+                                context.read<LoginCubit>().logout();
+                              },
+                            );
                           },
-                        );
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              );
+            }),
+          ),
+          body: SafeArea(
+            child: GestureDetector(
+              onTap: () {
+                FocusScopeNode currentFocus = FocusScope.of(context);
+
+                if (!currentFocus.hasPrimaryFocus) {
+                  currentFocus.unfocus();
+                }
+              },
+              child: Stack(
+                children: <Widget>[
+                  PersistentTabView(
+                    context,
+                    controller: _controller,
+                    onItemSelected: (value) {
+                      switch (value) {
+                        case 1:
+                          BlocProvider.of<AppbarSubtitleCubit>(context)
+                              .updateAppbarSubtitle('Friends');
+                          break;
+                        case 2:
+                          BlocProvider.of<AppbarSubtitleCubit>(context)
+                              .updateAppbarSubtitle('Callendar');
+                          break;
+                        case 3:
+                          BlocProvider.of<AppbarSubtitleCubit>(context)
+                              .updateAppbarSubtitle('Notification');
+                          break;
+                        case 4:
+                          BlocProvider.of<AppbarSubtitleCubit>(context)
+                              .updateAppbarSubtitle('Messages');
+                          break;
+                        default:
+                          BlocProvider.of<AppbarSubtitleCubit>(context)
+                              .updateAppbarSubtitle('Home');
+                      }
+                    },
+                    screens: _buildScreens(),
+                    items: _navBarsItems(),
+                    confineInSafeArea: true,
+                    backgroundColor: Colors.white, // Default is Colors.white.
+                    handleAndroidBackButtonPress: true, // Default is true.
+                    resizeToAvoidBottomInset:
+                        true, // This needs to be true if you want to move up the screen when keyboard appears. Default is true.
+                    stateManagement: true, // Default is true.
+                    hideNavigationBarWhenKeyboardShows:
+                        true, // Recommended to set 'resizeToAvoidBottomInset' as true while using this argument. Default is true.
+                    decoration: NavBarDecoration(
+                        colorBehindNavBar: AppColors.appBlack,
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.grey.shade600,
+                              spreadRadius: .2,
+                              blurRadius: 10)
+                        ]),
+                    popAllScreensOnTapOfSelectedTab: true,
+                    popActionScreens: PopActionScreensType.all,
+                    itemAnimationProperties: ItemAnimationProperties(
+                      // Navigation Bar's items animation properties.
+                      duration: Duration(milliseconds: 200),
+                      curve: Curves.ease,
+                    ),
+                    screenTransitionAnimation: ScreenTransitionAnimation(
+                      // Screen transition animation on change of selected tab.
+                      animateTabTransition: true,
+                      curve: Curves.ease,
+                      duration: Duration(milliseconds: 200),
+                    ),
+                    navBarStyle: NavBarStyle
+                        .style15, // Choose the nav bar style with this property.
+                  ),
+                  AtlyAppbar(
+                    onAction1: () {
+                      _key.currentState!.openDrawer();
+                    },
+                    onAction2: () {},
+                    onAction3: () {},
+                    subtitle: BlocBuilder<AppbarSubtitleCubit, String>(
+                      builder: (context, state) {
+                        return AtlyAppbarSubtitle(subtitle: state);
                       },
                     ),
-                  ],
-                ),
-              )
-            ],
-          ),
-        ),
-        body: Stack(
-          children: [
-            PersistentTabView(
-              context,
-              controller: _controller,
-              screens: _buildScreens(),
-              items: _navBarsItems(),
-              confineInSafeArea: true,
-              backgroundColor: Colors.white, // Default is Colors.white.
-              handleAndroidBackButtonPress: true, // Default is true.
-              resizeToAvoidBottomInset:
-                  true, // This needs to be true if you want to move up the screen when keyboard appears. Default is true.
-              stateManagement: true, // Default is true.
-              hideNavigationBarWhenKeyboardShows:
-                  true, // Recommended to set 'resizeToAvoidBottomInset' as true while using this argument. Default is true.
-              decoration: NavBarDecoration(
-                  colorBehindNavBar: AppColors.appBlack,
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.grey.shade600,
-                        spreadRadius: .2,
-                        blurRadius: 10)
-                  ]),
-              popAllScreensOnTapOfSelectedTab: true,
-              popActionScreens: PopActionScreensType.all,
-              itemAnimationProperties: ItemAnimationProperties(
-                // Navigation Bar's items animation properties.
-                duration: Duration(milliseconds: 200),
-                curve: Curves.ease,
+                  )
+                ],
               ),
-              screenTransitionAnimation: ScreenTransitionAnimation(
-                // Screen transition animation on change of selected tab.
-                animateTabTransition: true,
-                curve: Curves.ease,
-                duration: Duration(milliseconds: 200),
-              ),
-              navBarStyle: NavBarStyle
-                  .style15, // Choose the nav bar style with this property.
             ),
-            AtlyAppbar(
-              onAction1: () {
-                _key.currentState!.openDrawer();
-
-                print('clicked action 1');
-              },
-              onAction2: () {},
-              onAction3: () {},
-            ),
-          ],
-        ),
-      ),
+          )),
     );
   }
 }

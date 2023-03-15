@@ -17,6 +17,17 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   final UserService userService;
 
+  void initChatUser(String uid, String firstName, String lastName) async {
+    await FirebaseChatCore.instance.createUserInFirestore(
+      types.User(
+        firstName: firstName,
+        id: uid,
+        imageUrl: 'https://i.pravatar.cc/300',
+        lastName: lastName,
+      ),
+    );
+  }
+
   void getUserProfile() async {
     emit(ProfileLoading());
 
@@ -24,8 +35,12 @@ class ProfileCubit extends Cubit<ProfileState> {
       final User? user = firebaseAuth.currentUser;
       final UserProfileModel? userProfileModel =
           await userService.getUserProfile(id: user!.uid);
+
       logger().d(userProfileModel);
       if (userProfileModel != null) {
+        initChatUser(
+            user.uid, userProfileModel.firstName!, userProfileModel.lastName!);
+
         emit(ProfileSuccess(userProfileModel: userProfileModel));
       } else {
         emit(ProfileFailed());
@@ -44,7 +59,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       print(user);
       await userService.addUserProfile(
           userProfileModel: userProfileModel, id: user!.uid);
-      emit(SaveProfileSuccess());
+      emit(SaveProfileSuccess(userProfileModel: userProfileModel));
     } catch (e) {
       print(e);
       emit(SaveProfileFailed());
@@ -67,7 +82,7 @@ class ProfileCubit extends Cubit<ProfileState> {
         emit(SaveProfileFailed());
       }
 
-      emit(SaveProfileSuccess());
+      emit(SaveProfileSuccess(userProfileModel: userProfileModel));
     } catch (e) {
       print(e);
       emit(SaveProfileFailed());

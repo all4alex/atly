@@ -1,3 +1,4 @@
+import 'package:atly/src/app/app_text.dart';
 import 'package:flutter/material.dart';
 
 import '../../app/app_colors.dart';
@@ -13,18 +14,18 @@ class AtlyAppbarSubtitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    return SafeArea(
-      child: Container(
-        height: size.width * .05,
-        padding: EdgeInsets.only(left: 15),
-        alignment: Alignment.bottomLeft,
+    return Container(
+      width: size.width,
+      alignment: Alignment.bottomLeft,
+      child: Padding(
+        padding: const EdgeInsets.all(15.0),
         child: Text(
           subtitle,
-          style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                fontFamily: 'Poppins',
-                color: AppColors.iconBlue,
-                fontWeight: FontWeight.bold,
-              ),
+          style: AppText.subtitle2.copyWith(
+            fontFamily: 'Poppins',
+            color: AppColors.iconBlue,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     );

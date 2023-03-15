@@ -1,6 +1,11 @@
 import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import 'package:intl/intl.dart';
+
+import '../app/app_colors.dart';
 
 const colors = [
   Color(0xffff6767),
@@ -22,3 +27,35 @@ Color getUserAvatarNameColor(types.User user) {
 
 String getUserName(types.User user) =>
     '${user.firstName ?? ''} ${user.lastName ?? ''}'.trim();
+
+String getChatTitle(types.Room room) {
+  String allUsers = '';
+  for (var element in room.users) {
+    allUsers = '$allUsers${element.firstName}, ';
+  }
+  return room.name!.isEmpty ? allUsers : room.name!;
+}
+
+Widget buildAvatar(types.Room room) {
+  var color = Colors.transparent;
+
+  final hasImage = room.imageUrl != null;
+  final name = room.name ?? '';
+
+  return Container(
+    margin: const EdgeInsets.only(right: 16),
+    child: CircleAvatar(
+      backgroundColor: hasImage ? AppColors.appOrange : color,
+      backgroundImage: hasImage
+          ? CachedNetworkImageProvider(room.imageUrl!)
+          : CachedNetworkImageProvider('https://i.pravatar.cc/300'),
+      radius: 20,
+      child: !hasImage
+          ? Text(
+              name.isEmpty ? '' : name[0].toUpperCase(),
+              style: const TextStyle(color: Colors.white),
+            )
+          : null,
+    ),
+  );
+}

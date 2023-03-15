@@ -1,4 +1,7 @@
+import 'package:atly/src/app/app_colors.dart';
 import 'package:flutter/material.dart';
+
+import '../../widgets/atly_appbar_subtitle.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -6,10 +9,9 @@ class DashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        child: Center(
-          child: Text('Dashboard Screen'),
-        ),
+      backgroundColor: AppColors.appWhite,
+      body: Center(
+        child: Text('Dashboard Screen'),
       ),
     );
   }

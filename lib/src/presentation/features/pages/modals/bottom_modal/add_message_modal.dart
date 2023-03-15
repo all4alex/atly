@@ -1,13 +1,16 @@
 import 'package:atly/src/presentation/widgets/search_bar.dart';
+import 'package:atly/src/utilities/logger.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 
 import '../../../../../app/app_colors.dart';
+import '../../../../../app/app_text.dart';
 
 class AddMessageModal extends StatefulWidget {
   const AddMessageModal({Key? key}) : super(key: key);
@@ -17,26 +20,25 @@ class AddMessageModal extends StatefulWidget {
 }
 
 class _AddMessageModalState extends State<AddMessageModal> {
-  // Create a user with an ID of UID if you don't use `FirebaseChatCore.instance.users()` stream
-  void _handlePressed(types.User otherUser, BuildContext context) async {
-    final room = await FirebaseChatCore.instance.createRoom(otherUser);
+  late types.Room room;
+  void _createChatRoom(types.User otherUser, BuildContext context) async {
+    room = await FirebaseChatCore.instance.createRoom(otherUser);
   }
 
-  String? selectedMode;
-  List list = [
-    "Flutter",
-    "React",
-    "Ionic",
-    "Xamarin",
-  ];
+  void _createGroupChatRoom(
+      List<types.User> otherUsers, BuildContext context) async {
+    room = await FirebaseChatCore.instance
+        .createGroupRoom(users: otherUsers, name: '');
+  }
+
+  List<types.User> selectedChatUsers = [];
 
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
-    selectedMode = selectedMode ?? 'Messages';
     return Material(
-      child: Container(
-        height: MediaQuery.of(context).size.height * .75,
+      child: SizedBox(
+        height: MediaQuery.of(context).size.height * .72,
         child: Column(
           children: [
             Container(
@@ -65,7 +67,7 @@ class _AddMessageModalState extends State<AddMessageModal> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        '$selectedMode',
+                        'Message',
                         style: Theme.of(context).textTheme.titleSmall!.copyWith(
                               fontFamily: 'Poppins',
                               color: AppColors.iconBlue,
@@ -93,7 +95,7 @@ class _AddMessageModalState extends State<AddMessageModal> {
               padding: EdgeInsets.only(left: 20),
               alignment: Alignment.centerLeft,
               child: Text(
-                'Results',
+                'Suggested',
                 style: Theme.of(context).textTheme.labelSmall!.copyWith(
                       fontFamily: 'Poppins',
                       color: Colors.black,
@@ -101,7 +103,7 @@ class _AddMessageModalState extends State<AddMessageModal> {
               ),
             ),
             SizedBox(
-              height: MediaQuery.of(context).size.height * .45,
+              height: screenSize.height * .45,
               child: StreamBuilder<List<types.User>>(
                 stream: FirebaseChatCore.instance.users(),
                 initialData: const [],
@@ -116,50 +118,82 @@ class _AddMessageModalState extends State<AddMessageModal> {
                         ? Center(
                             child: Text('Go create a conversation.'),
                           )
-                        : ListView.builder(
-                            padding: EdgeInsets.zero,
-                            addAutomaticKeepAlives: false,
-                            scrollDirection: Axis.vertical,
-                            itemBuilder: (BuildContext context, int index) {
-                              types.User chatUser = snapshot.data![index];
-                              return InkWell(
-                                  onTap: () async {
-                                    _handlePressed(chatUser, context);
+                        : Column(
+                            children: [
+                              Expanded(
+                                child: ListView.builder(
+                                  padding: EdgeInsets.zero,
+                                  addAutomaticKeepAlives: false,
+                                  scrollDirection: Axis.vertical,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    types.User chatUser = snapshot.data![index];
+
+                                    return ChatUserListTIle(
+                                      chatUser: chatUser,
+                                      onChange: (isChecked, chatUser) {
+                                        if (isChecked) {
+                                          selectedChatUsers.add(chatUser);
+                                        } else {
+                                          selectedChatUsers.removeWhere(
+                                              (element) =>
+                                                  element.id == chatUser.id);
+                                        }
+                                        logger().d(selectedChatUsers);
+                                        logger().d(selectedChatUsers.length);
+                                      },
+                                    );
                                   },
-                                  child: ListTile(
-                                    leading: Container(
-                                      margin: EdgeInsets.only(right: 16),
-                                      child: CircleAvatar(
-                                        backgroundColor: Colors.transparent,
-                                        backgroundImage:
-                                            chatUser.imageUrl != null
-                                                ? CachedNetworkImageProvider(
-                                                    chatUser.imageUrl!)
-                                                : null,
-                                        radius: 20,
+                                  itemCount: snapshot.data!.length,
+                                ),
+                              ),
+                              Container(
+                                padding: EdgeInsets.symmetric(horizontal: 20),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: SizedBox(
+                                        height: screenSize.height * .05,
+                                        child: GFButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          shape: GFButtonShape.pills,
+                                          color: AppColors.appWhite,
+                                          child: Text('Draft',
+                                              style: AppText.body2.copyWith(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: AppColors.appBlue)),
+                                        ),
                                       ),
                                     ),
-                                    title: Text(
-                                      '${chatUser.firstName} ${chatUser.lastName}',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleSmall!
-                                          .copyWith(
-                                            fontFamily: 'Poppins',
-                                            color: Colors.black,
-                                          ),
+                                    Gap(15),
+                                    Expanded(
+                                      child: SizedBox(
+                                        height: screenSize.height * .05,
+                                        child: GFButton(
+                                          onPressed: () {
+                                            if (selectedChatUsers.length > 1) {
+                                              _createGroupChatRoom(
+                                                  selectedChatUsers, context);
+                                            } else {
+                                              _createChatRoom(
+                                                  selectedChatUsers.first,
+                                                  context);
+                                            }
+                                          },
+                                          shape: GFButtonShape.pills,
+                                          child: Text('Message',
+                                              style: AppText.body2.copyWith(
+                                                fontWeight: FontWeight.bold,
+                                              )),
+                                        ),
+                                      ),
                                     ),
-                                    trailing: GFCheckbox(
-                                      size: GFSize.SMALL,
-                                      activeBgColor: GFColors.DANGER,
-                                      type: GFCheckboxType.circle,
-                                      onChanged: (value) {},
-                                      value: false,
-                                      inactiveIcon: null,
-                                    ),
-                                  ));
-                            },
-                            itemCount: snapshot.data!.length,
+                                  ],
+                                ),
+                              )
+                            ],
                           );
                   } else {
                     return Center(child: CircularProgressIndicator());
@@ -169,6 +203,65 @@ class _AddMessageModalState extends State<AddMessageModal> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class ChatUserListTIle extends StatefulWidget {
+  const ChatUserListTIle({
+    super.key,
+    required this.chatUser,
+    required this.onChange,
+  });
+
+  final types.User chatUser;
+  final Function(bool, types.User) onChange;
+
+  @override
+  State<ChatUserListTIle> createState() => _ChatUserListTIleState();
+}
+
+class _ChatUserListTIleState extends State<ChatUserListTIle> {
+  bool isChecked = false;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: Container(
+        margin: EdgeInsets.only(right: 16),
+        child: CircleAvatar(
+          backgroundColor: Colors.transparent,
+          backgroundImage: widget.chatUser.imageUrl != null
+              ? CachedNetworkImageProvider(widget.chatUser.imageUrl!)
+              : null,
+          radius: 20,
+        ),
+      ),
+      title: Text(
+        '${widget.chatUser.firstName} ${widget.chatUser.lastName}',
+        style: Theme.of(context).textTheme.titleSmall!.copyWith(
+              fontFamily: 'Poppins',
+              color: Colors.black,
+            ),
+      ),
+      trailing: GFCheckbox(
+        size: GFSize.SMALL,
+        activeBgColor: AppColors.appOrange,
+        type: GFCheckboxType.circle,
+        onChanged: (value) {
+          setState(() {
+            isChecked = value;
+          });
+          widget.onChange(isChecked, widget.chatUser);
+        },
+        value: isChecked,
+        inactiveIcon: null,
       ),
     );
   }

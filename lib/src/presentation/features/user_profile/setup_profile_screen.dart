@@ -26,6 +26,12 @@ class _SetupProfileScreenState extends State<SetupProfileScreen> {
   UserProfileModel userProfileModel = UserProfileModel();
   final _formKey = GlobalKey<FormState>();
   late ProfileCubit profileCubit;
+  String? firstName;
+  String? lastName;
+  String? contactNumber;
+  String? bday;
+  String? country;
+  String? city;
 
   @override
   void initState() {
@@ -117,8 +123,7 @@ class _SetupProfileScreenState extends State<SetupProfileScreen> {
                       }
                       return null;
                     },
-                    onSaved: (newValue) =>
-                        userProfileModel.copyWith(firstName: newValue),
+                    onSaved: (newValue) => firstName = newValue,
                   ),
                   Gap(10),
                   TextFormField(
@@ -137,8 +142,7 @@ class _SetupProfileScreenState extends State<SetupProfileScreen> {
                       }
                       return null;
                     },
-                    onSaved: (newValue) =>
-                        userProfileModel.copyWith(lastName: newValue),
+                    onSaved: (newValue) => lastName = newValue,
                   ),
                   Gap(10),
                   TextFormField(
@@ -158,8 +162,7 @@ class _SetupProfileScreenState extends State<SetupProfileScreen> {
                       }
                       return null;
                     },
-                    onSaved: (newValue) =>
-                        userProfileModel.copyWith(contactNumber: newValue),
+                    onSaved: (newValue) => contactNumber = newValue,
                   ),
                   Gap(10),
                   TextFormField(
@@ -186,12 +189,10 @@ class _SetupProfileScreenState extends State<SetupProfileScreen> {
                     //   }
                     //   return null;
                     // },
-                    onSaved: (newValue) =>
-                        userProfileModel.copyWith(bday: newValue),
+                    onSaved: (newValue) => bday = newValue,
                   ),
                   Gap(10),
                   TextFormField(
-                    keyboardType: TextInputType.phone,
                     decoration: InputDecoration(
                       hintText: "Country",
                       filled: true,
@@ -207,12 +208,10 @@ class _SetupProfileScreenState extends State<SetupProfileScreen> {
                       }
                       return null;
                     },
-                    onSaved: (newValue) =>
-                        userProfileModel.copyWith(country: newValue),
+                    onSaved: (newValue) => country = newValue,
                   ),
                   Gap(10),
                   TextFormField(
-                    keyboardType: TextInputType.phone,
                     decoration: InputDecoration(
                       hintText: "City",
                       filled: true,
@@ -228,16 +227,22 @@ class _SetupProfileScreenState extends State<SetupProfileScreen> {
                       }
                       return null;
                     },
-                    onSaved: (newValue) =>
-                        userProfileModel.copyWith(city: newValue),
+                    onSaved: (newValue) => city = newValue,
                   ),
                   Gap(20),
                   BlocBuilder<ProfileCubit, ProfileState>(
                     builder: (context, state) {
                       return ElevatedButton(
                         onPressed: () {
+                          _formKey.currentState?.save();
                           profileCubit.saveUserProfile(
-                              userProfileModel: userProfileModel);
+                              userProfileModel: UserProfileModel(
+                                  firstName: firstName,
+                                  lastName: lastName,
+                                  contactNumber: contactNumber,
+                                  bday: bday,
+                                  country: country,
+                                  city: city));
                         },
                         style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.appBlue,
@@ -246,7 +251,7 @@ class _SetupProfileScreenState extends State<SetupProfileScreen> {
                                 borderRadius: BorderRadius.circular(50))),
                         child: state is SaveProfileLoading
                             ? const CircularProgressIndicator()
-                            : Text('Create Account',
+                            : Text('SUBMIT',
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleMedium!

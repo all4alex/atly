@@ -2,12 +2,12 @@
 import 'dart:convert';
 
 class UserProfileModel {
-  final String? firstName;
-  final String? lastName;
-  final String? contactNumber;
-  final String? bday;
-  final String? country;
-  final String? city;
+  String? firstName;
+  String? lastName;
+  String? contactNumber;
+  String? bday;
+  String? country;
+  String? city;
 
   UserProfileModel({
     this.firstName,
