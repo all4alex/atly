@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:atly/src/app/app_colors.dart';
 import 'package:atly/src/app/app_text.dart';
+import 'package:atly/src/utilities/logger.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -31,6 +32,13 @@ class MessageScreen extends StatefulWidget {
 
 class _MessageScreenState extends State<MessageScreen> {
   bool _isAttachmentUploading = false;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    logger().d(widget.room);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,9 +73,6 @@ class _MessageScreenState extends State<MessageScreen> {
                     IconButton(onPressed: () {}, icon: Icon(Icons.more_horiz)),
               ),
             ),
-            Divider(
-              thickness: 2,
-            ),
             Expanded(
               child: Container(
                 color: AppColors.appGrey,
@@ -82,9 +87,9 @@ class _MessageScreenState extends State<MessageScreen> {
                       showUserAvatars: true,
                       isAttachmentUploading: _isAttachmentUploading,
                       messages: snapshot.data ?? [],
+                      usePreviewData: true,
                       onAttachmentPressed: _handleAtachmentPressed,
                       onMessageTap: _handleMessageTap,
-                      onMessageVisibilityChanged: (p0, visible) {},
                       onPreviewDataFetched: _handlePreviewDataFetched,
                       onSendPressed: _handleSendPressed,
                       theme: DefaultChatTheme(

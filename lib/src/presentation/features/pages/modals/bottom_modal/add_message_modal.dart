@@ -1,4 +1,6 @@
+import 'package:atly/src/app/app.dart';
 import 'package:atly/src/presentation/features/pages/cubit/chat_cubit.dart';
+import 'package:atly/src/presentation/features/pages/modals/samples/floating_modal.dart';
 import 'package:atly/src/presentation/widgets/search_bar.dart';
 import 'package:atly/src/utilities/logger.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -23,6 +25,8 @@ class AddMessageModal extends StatefulWidget {
 
 class _AddMessageModalState extends State<AddMessageModal> {
   List<types.User> selectedChatUsers = [];
+  String groupName = 'Group Name';
+  types.User? selectedContact;
 
   @override
   Widget build(BuildContext context) {
@@ -43,59 +47,112 @@ class _AddMessageModalState extends State<AddMessageModal> {
             height: MediaQuery.of(context).size.height * .72,
             child: Column(
               children: [
-                Container(
-                  alignment: Alignment.topRight,
-                  child: IconButton(
-                    icon: Icon(Icons.close),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.only(left: 15),
-                  alignment: Alignment.centerLeft,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Create New',
-                        style:
-                            Theme.of(context).textTheme.labelMedium!.copyWith(
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 16, left: 16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Create New',
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelMedium!
+                                .copyWith(
+                                  fontFamily: 'Poppins',
+                                  color: AppColors.appBlack,
+                                ),
+                          ),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              TextButton(
+                                onPressed: () {
+                                  showCustomModalBottomSheet(
+                                      context: context,
+                                      builder: (_) => SingleChildScrollView(
+                                            controller:
+                                                ModalScrollController.of(
+                                                    context),
+                                            child: Container(
+                                              child: Column(
+                                                children: [
+                                                  ListTile(
+                                                    title: Text('Message'),
+                                                  ),
+                                                  ListTile(
+                                                    title: Text('Group'),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                      containerWidget:
+                                          (context, animation, child) =>
+                                              FloatingModal(
+                                                child: child,
+                                              ),
+                                      expand: false);
+                                },
+                                child: Text(
+                                  'Message',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleSmall!
+                                      .copyWith(
+                                        fontFamily: 'Poppins',
+                                        color: AppColors.iconBlue,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                ),
+                              ),
+                              Icon(Icons.arrow_drop_down),
+                            ],
+                          ),
+                          Text(
+                            'New Message',
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelSmall!
+                                .copyWith(
                                   fontFamily: 'Poppins',
                                   color: Colors.black,
                                 ),
-                      ),
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            'Message',
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleSmall!
-                                .copyWith(
-                                  fontFamily: 'Poppins',
-                                  color: AppColors.iconBlue,
-                                  fontWeight: FontWeight.bold,
-                                ),
                           ),
-                          Icon(Icons.arrow_drop_down),
                         ],
                       ),
-                      Text(
-                        'New Message',
-                        style: Theme.of(context).textTheme.labelSmall!.copyWith(
-                              fontFamily: 'Poppins',
-                              color: Colors.black,
-                            ),
+                    ),
+                    IconButton(
+                      padding: EdgeInsets.zero,
+                      style: IconButton.styleFrom(),
+                      icon: Icon(
+                        Icons.close,
                       ),
-                    ],
-                  ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
                 ),
-                Container(
-                  padding: EdgeInsets.all(10),
-                  child: SearchBar(hintText: 'Search for contacts'),
+                TextFormField(
+                  decoration: InputDecoration(
+                    hintText: "Email",
+                    filled: true,
+                    fillColor: Colors.grey[200],
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "Email can't be empty";
+                    }
+                    return null;
+                  },
+                  onSaved: (newValue) {},
                 ),
                 Container(
                   padding: EdgeInsets.only(left: 20),
@@ -108,8 +165,7 @@ class _AddMessageModalState extends State<AddMessageModal> {
                         ),
                   ),
                 ),
-                SizedBox(
-                  height: screenSize.height * .45,
+                Expanded(
                   child: StreamBuilder<List<types.User>>(
                     stream: FirebaseChatCore.instance.users(),
                     initialData: const [],
@@ -122,7 +178,7 @@ class _AddMessageModalState extends State<AddMessageModal> {
                         if (snapshot.hasData) {}
                         return snapshot.data!.isEmpty
                             ? Center(
-                                child: Text('Go create a conversation.'),
+                                child: Text('No available user.'),
                               )
                             : Column(
                                 children: [
@@ -156,70 +212,66 @@ class _AddMessageModalState extends State<AddMessageModal> {
                                       itemCount: snapshot.data!.length,
                                     ),
                                   ),
-                                  Container(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 20),
-                                    child: Row(
-                                      children: [
-                                        Expanded(
-                                          child: SizedBox(
-                                            height: screenSize.height * .05,
-                                            child: GFButton(
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                              shape: GFButtonShape.pills,
-                                              color: AppColors.appWhite,
-                                              child: Text('Draft',
-                                                  style: AppText.body2.copyWith(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color:
-                                                          AppColors.appBlue)),
-                                            ),
-                                          ),
-                                        ),
-                                        Gap(15),
-                                        Expanded(
-                                          child: SizedBox(
-                                            height: screenSize.height * .05,
-                                            child: GFButton(
-                                              onPressed: () {
-                                                if (selectedChatUsers.length >
-                                                    1) {
-                                                  BlocProvider.of<ChatCubit>(
-                                                          context)
-                                                      .createGroupChat(
-                                                          selectedChatUsers,
-                                                          context);
-                                                } else {
-                                                  BlocProvider.of<ChatCubit>(
-                                                          context)
-                                                      .creatDirectChat(
-                                                          selectedChatUsers
-                                                              .first,
-                                                          context);
-                                                }
-                                              },
-                                              shape: GFButtonShape.pills,
-                                              child: Text('Message',
-                                                  style: AppText.body2.copyWith(
-                                                    fontWeight: FontWeight.bold,
-                                                  )),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  )
                                 ],
                               );
                       } else {
-                        return Center(child: CircularProgressIndicator());
+                        return Center(child: AppLoader.loaderOne);
                       }
                     },
                   ),
                 ),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  alignment: Alignment.bottomCenter,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: SizedBox(
+                          child: GFButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            shape: GFButtonShape.pills,
+                            color: AppColors.appWhite,
+                            child: Text('Draft',
+                                style: AppText.body2.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.appBlue)),
+                          ),
+                        ),
+                      ),
+                      Gap(15),
+                      Expanded(
+                        child: SizedBox(
+                          child: GFButton(
+                            onPressed: () {
+                              if (selectedChatUsers.length > 1) {
+                                //                               String groupName = await  showCupertinoModalBottomSheet(
+                                // context: context,
+                                // useRootNavigator: true,
+                                // overlayStyle: SystemUiOverlayStyle(),
+                                // builder: (context) => Material(child:));
+                                BlocProvider.of<ChatCubit>(context)
+                                    .createGroupChat(
+                                        selectedChatUsers, groupName, context);
+                              } else {
+                                BlocProvider.of<ChatCubit>(context)
+                                    .creatDirectChat(
+                                        selectedChatUsers.first, context);
+                              }
+                            },
+                            shape: GFButtonShape.pills,
+                            child: Text('Message',
+                                style: AppText.body2.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                )),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
               ],
             ),
           ),

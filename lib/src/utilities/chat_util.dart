@@ -1,8 +1,10 @@
 import 'dart:ui';
 
+import 'package:atly/src/utilities/logger.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:intl/intl.dart';
 
 import '../app/app_colors.dart';
@@ -30,10 +32,22 @@ String getUserName(types.User user) =>
 
 String getChatTitle(types.Room room) {
   String allUsers = '';
-  for (var element in room.users) {
-    allUsers = '$allUsers${element.firstName}, ';
+  for (types.User user in room.users) {
+    allUsers = '$allUsers${user.firstName}, ';
   }
-  return room.name!.isEmpty ? allUsers : room.name!;
+  return room.name ?? allUsers;
+}
+
+String getLastMessage(types.Room room) {
+  String lastMessage = '';
+
+  if (room.lastMessages != null) {
+    types.TextMessage textMessage =
+        room.lastMessages!.first as types.TextMessage;
+
+    lastMessage = textMessage.text;
+  }
+  return lastMessage;
 }
 
 Widget buildAvatar(types.Room room) {

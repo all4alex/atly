@@ -1,6 +1,9 @@
+import 'package:atly/src/app/app.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
+import 'package:getwidget/getwidget.dart';
+import 'package:getwidget/types/gf_loader_type.dart';
 
 class UsersPage extends StatelessWidget {
   const UsersPage({Key? key}) : super(key: key);
@@ -48,7 +51,7 @@ class UsersPage extends StatelessWidget {
                   itemCount: snapshot.data!.length,
                 );
         } else {
-          return Center(child: CircularProgressIndicator());
+          return Center(child: AppLoader.loaderOne);
         }
       },
     ));

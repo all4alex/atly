@@ -32,14 +32,14 @@ class MessagesIcon extends StatelessWidget {
         return InkWell(
           onTap: () async {
             await pushNewScreen(
-              selectedTabScreenContext!,
+              context,
               screen: MessageListScreen(rooms: rooms),
-              withNavBar: true, // OPTIONAL VALUE. True by default.
-              pageTransitionAnimation: PageTransitionAnimation.slideUp,
+              withNavBar: true,
+              pageTransitionAnimation: PageTransitionAnimation.cupertino,
             );
           },
           child: Badge(
-            label: Text('${rooms.length}'),
+            label: Text('1'),
             isLabelVisible: rooms.isNotEmpty,
             child: SizedBox(
               width: 24,

@@ -281,7 +281,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                               borderRadius:
                                                   BorderRadius.circular(50))),
                                       child: state is RegisterLoding
-                                          ? const CircularProgressIndicator()
+                                          ? const GFLoader(
+                                              type: GFLoaderType.circle)
                                           : Text(AppString.createAccount,
                                               style: Theme.of(context)
                                                   .textTheme

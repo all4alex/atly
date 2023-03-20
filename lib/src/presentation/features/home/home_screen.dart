@@ -1,4 +1,5 @@
 import 'package:atly/main.dart';
+import 'package:atly/src/app/app_loader.dart';
 import 'package:atly/src/app/app_strings.dart';
 import 'package:atly/src/app/app_text.dart';
 import 'package:atly/src/data/models/user_profile_model.dart';
@@ -185,7 +186,7 @@ class _HomeScreenState extends State<HomeScreen> {
               onBlast: () {},
               onEvent: () {},
               onMessage: () async {
-                await showCupertinoModalBottomSheet<Room?>(
+                await showCupertinoModalBottomSheet(
                   context: context,
                   useRootNavigator: true,
                   overlayStyle: SystemUiOverlayStyle(),
@@ -199,6 +200,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         overlayStyle: SystemUiOverlayStyle(),
                         builder: (context) => MessageScreen(room: value));
                   }
+                  return;
                 });
               },
               onPitch: () {},
@@ -284,7 +286,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         BlocBuilder<LoginCubit, LoginState>(
                           builder: (context, state) {
                             if (state is LogoutLoading) {
-                              return CircularProgressIndicator();
+                              return AppLoader.loaderOne;
                             }
                             return ListTile(
                               title: Text(AppString.logout,
@@ -327,15 +329,15 @@ class _HomeScreenState extends State<HomeScreen> {
                           break;
                         case 2:
                           BlocProvider.of<AppbarSubtitleCubit>(context)
-                              .updateAppbarSubtitle('Callendar');
+                              .updateAppbarSubtitle('');
                           break;
                         case 3:
                           BlocProvider.of<AppbarSubtitleCubit>(context)
-                              .updateAppbarSubtitle('Notification');
+                              .updateAppbarSubtitle('Callendar');
                           break;
                         case 4:
                           BlocProvider.of<AppbarSubtitleCubit>(context)
-                              .updateAppbarSubtitle('Messages');
+                              .updateAppbarSubtitle('Notification');
                           break;
                         default:
                           BlocProvider.of<AppbarSubtitleCubit>(context)

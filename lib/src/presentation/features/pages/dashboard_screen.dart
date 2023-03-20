@@ -15,10 +15,13 @@ class DashboardScreen extends StatelessWidget {
     "https://cdn.pixabay.com/photo/2017/12/03/18/04/christmas-balls-2995437_960_720.jpg",
     "https://cdn.pixabay.com/photo/2017/12/13/00/23/christmas-3015776_960_720.jpg",
     "https://cdn.pixabay.com/photo/2019/12/19/10/55/christmas-market-4705877_960_720.jpg",
+  ];
+  final List<String> imageList2 = [
     "https://cdn.pixabay.com/photo/2019/12/20/00/03/road-4707345_960_720.jpg",
     "https://cdn.pixabay.com/photo/2019/12/22/04/18/x-mas-4711785__340.jpg",
     "https://cdn.pixabay.com/photo/2016/11/22/07/09/spruce-1848543__340.jpg"
   ];
+
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
@@ -74,21 +77,51 @@ class DashboardScreen extends StatelessWidget {
             //     ),
             //   ),
             // ),
+
             SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (BuildContext context, int index) {
-                  return Container(
-                    child: GFItemsCarousel(
-                      rowCount: 2,
-                      children: imageList.map(
-                        (url) {
-                          return EventCard();
-                        },
-                      ).toList(),
+              delegate: SliverChildListDelegate(
+                [
+                  Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: Text(
+                            'Events',
+                            style: AppText.body2.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.appBlue),
+                          ),
+                        ),
+                        Container(
+                            color: Colors.red,
+                            height: screenSize.height * .18,
+                            width: screenSize.width),
+                      ],
                     ),
-                  );
-                },
-                childCount: 1,
+                  ),
+                  Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: Text(
+                            'Pitches',
+                            style: AppText.body2.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.appPink),
+                          ),
+                        ),
+                        Container(
+                            color: Colors.red,
+                            height: screenSize.height * .14,
+                            width: screenSize.width),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -110,8 +143,8 @@ class EventCard extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.all(Radius.circular(10)),
         child: SizedBox(
-          height: screenSize.height * .2,
-          width: screenSize.width * .8,
+          height: screenSize.height * .18,
+          width: screenSize.width * .7,
           child: Column(
             children: [
               Expanded(
@@ -120,8 +153,9 @@ class EventCard extends StatelessWidget {
                   children: [
                     Align(
                       alignment: AlignmentDirectional(0, 0),
-                      child: Image.network(
-                        'https://firebasestorage.googleapis.com/v0/b/atly-98006.appspot.com/o/app_assets%2Fimages%2Fkelsey-knight-udj2tD3WKsY-unsplash.jpg?alt=media&token=d8df93c1-fe3c-4d26-be46-94399b863620',
+                      child: CachedNetworkImage(
+                        imageUrl:
+                            'https://firebasestorage.googleapis.com/v0/b/atly-98006.appspot.com/o/app_assets%2Fimages%2Fkelsey-knight-udj2tD3WKsY-unsplash.jpg?alt=media&token=d8df93c1-fe3c-4d26-be46-94399b863620',
                         width: double.infinity,
                         fit: BoxFit.fitWidth,
                       ),
@@ -178,20 +212,20 @@ class EventCard extends StatelessWidget {
                         children: [
                           Text(
                             'Event Name',
-                            style: AppText.body2
-                                .copyWith(fontWeight: FontWeight.bold),
+                            style: AppText.body2.copyWith(
+                                fontWeight: FontWeight.bold, fontSize: 14),
                           ),
                           Gap(5),
                           Text(
                             '@',
-                            style: AppText.body2
-                                .copyWith(fontWeight: FontWeight.bold),
+                            style: AppText.body2.copyWith(
+                                fontWeight: FontWeight.bold, fontSize: 14),
                           ),
                           Gap(2),
                           Text(
                             "Adam's",
-                            style: AppText.body2
-                                .copyWith(fontWeight: FontWeight.bold),
+                            style: AppText.body2.copyWith(
+                                fontWeight: FontWeight.bold, fontSize: 14),
                           ),
                         ],
                       ),
@@ -199,21 +233,21 @@ class EventCard extends StatelessWidget {
                         children: [
                           Text(
                             'Feb 24',
-                            style: AppText.caption
-                                .copyWith(fontWeight: FontWeight.bold),
+                            style: AppText.caption.copyWith(
+                                fontWeight: FontWeight.bold, fontSize: 12),
                           ),
                           Gap(5),
                           Text(
                             '00:00 - 00:00 PM',
-                            style: AppText.caption
-                                .copyWith(color: AppColors.appGrey),
+                            style: AppText.caption.copyWith(
+                                color: AppColors.appGrey, fontSize: 12),
                           ),
                         ],
                       ),
                       Text(
                         '16 other friends going',
-                        style:
-                            AppText.caption.copyWith(color: AppColors.appGrey),
+                        style: AppText.caption
+                            .copyWith(color: AppColors.appGrey, fontSize: 12),
                       ),
                     ],
                   ),

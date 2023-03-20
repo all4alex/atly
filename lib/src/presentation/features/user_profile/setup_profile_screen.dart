@@ -1,9 +1,11 @@
+import 'package:atly/src/app/app.dart';
 import 'package:atly/src/data/services/api/user_service.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:getwidget/getwidget.dart';
 
 import '../../../app/app_colors.dart';
 import '../../../app/app_text.dart';
@@ -250,7 +252,7 @@ class _SetupProfileScreenState extends State<SetupProfileScreen> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(50))),
                         child: state is SaveProfileLoading
-                            ? const CircularProgressIndicator()
+                            ? AppLoader.loaderOne
                             : Text('SUBMIT',
                                 style: Theme.of(context)
                                     .textTheme
