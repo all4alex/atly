@@ -14,23 +14,32 @@ import 'package:persistent_bottom_nav_bar_v2/persistent-tab-view.dart';
 
 import 'package:flutter/material.dart';
 
-import '../../widgets/atly_appbar.dart';
 import 'message_screen.dart';
 
 class MessageListScreen extends StatefulWidget {
-  const MessageListScreen({super.key});
+  const MessageListScreen({super.key, required this.rooms});
+  final List<types.Room> rooms;
+
+  static const String routeName = '/register';
+  static const String screenName = 'RegisterScreen';
+
+  static ModalRoute route({required List<types.Room> rooms}) =>
+      MaterialPageRoute(
+          builder: (context) => MessageListScreen(
+                rooms: rooms,
+              ),
+          settings: RouteSettings(name: routeName));
   @override
   State<MessageListScreen> createState() => _MessageScreenState();
 }
 
 class _MessageScreenState extends State<MessageListScreen> {
-  bool _error = false;
-  bool _initialized = false;
-  User? _user;
+  List<types.Room> rooms = [];
 
   @override
   void initState() {
     super.initState();
+    rooms = widget.rooms;
   }
 
   @override
@@ -40,9 +49,8 @@ class _MessageScreenState extends State<MessageListScreen> {
       color: AppColors.appWhite,
       child: StreamBuilder<List<types.Room>>(
         stream: FirebaseChatCore.instance.rooms(),
-        initialData: const [],
+        initialData: rooms,
         builder: (context, snapshot) {
-          List<types.Room> rooms = [];
           if (snapshot.connectionState == ConnectionState.done ||
               snapshot.connectionState == ConnectionState.active) {
             if (snapshot.hasError) {
@@ -50,7 +58,6 @@ class _MessageScreenState extends State<MessageListScreen> {
             }
             if (snapshot.hasData) {
               rooms = snapshot.data!;
-
               return ListView.separated(
                   padding: EdgeInsets.only(top: screenSize.height * .15),
                   itemBuilder: (context, index) {
@@ -61,7 +68,6 @@ class _MessageScreenState extends State<MessageListScreen> {
                               context: context,
                               useRootNavigator: true,
                               overlayStyle: SystemUiOverlayStyle(),
-                              backgroundColor: Colors.red,
                               builder: (context) => MessageScreen(room: room));
                         },
                         child: ListTile(

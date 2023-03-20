@@ -10,6 +10,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
 late FirebaseAuth firebaseAuth;
+BuildContext? selectedTabScreenContext;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

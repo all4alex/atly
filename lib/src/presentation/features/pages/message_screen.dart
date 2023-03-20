@@ -84,6 +84,7 @@ class _MessageScreenState extends State<MessageScreen> {
                       messages: snapshot.data ?? [],
                       onAttachmentPressed: _handleAtachmentPressed,
                       onMessageTap: _handleMessageTap,
+                      onMessageVisibilityChanged: (p0, visible) {},
                       onPreviewDataFetched: _handlePreviewDataFetched,
                       onSendPressed: _handleSendPressed,
                       theme: DefaultChatTheme(

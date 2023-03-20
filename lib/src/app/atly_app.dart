@@ -46,6 +46,7 @@ class _AtlyAppState extends State<AtlyApp> {
           return MaterialApp(
             title: 'Atly',
             debugShowCheckedModeBanner: false,
+            theme: ThemeData(fontFamily: 'Outfit'),
             locale: DevicePreview.locale(context),
             routes: {
               '/': (context) => BlocProvider.value(

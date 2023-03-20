@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:atly/main.dart';
 import 'package:atly/src/app/app_strings.dart';
 import 'package:atly/src/app/app_text.dart';
@@ -21,6 +19,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
 import 'package:getwidget/getwidget.dart';
@@ -31,6 +30,8 @@ import '../../../app/app_colors.dart';
 import '../../widgets/atly_appbar_subtitle.dart';
 import '../../widgets/bx_scaffold.dart';
 import '../pages/add_nav_screen.dart';
+import '../pages/friend_list_screen.dart';
+import '../pages/message_screen.dart';
 import '../pages/notification_screen.dart';
 import '../../widgets/atly_appbar.dart';
 
@@ -64,7 +65,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  BuildContext? testContext;
   UserProfileModel userProfileModel = UserProfileModel();
   late PersistentTabController _controller;
   final GlobalKey<ScaffoldState> _key = GlobalKey();
@@ -73,9 +73,10 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    _controller = PersistentTabController(initialIndex: 0);
+    _controller = PersistentTabController();
     profileCubit = BlocProvider.of<ProfileCubit>(context);
     profileCubit.getUserProfile();
+    BlocProvider.of<AppbarSubtitleCubit>(context).updateAppbarSubtitle('Home');
   }
 
   @override
@@ -84,7 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     List<Widget> _buildScreens() => [
           DashboardScreen(),
-          MessageListScreen(),
+          FriendListScreen(),
           HomeAddNavModal(),
           CallendarScreen(),
           NotificationScreen()
@@ -183,13 +184,22 @@ class _HomeScreenState extends State<HomeScreen> {
             child: NavSpeedDial(
               onBlast: () {},
               onEvent: () {},
-              onMessage: () {
-                showCupertinoModalBottomSheet(
-                    context: context,
-                    useRootNavigator: true,
-                    overlayStyle: SystemUiOverlayStyle(),
-                    backgroundColor: Colors.transparent,
-                    builder: (context) => AddMessageModal());
+              onMessage: () async {
+                await showCupertinoModalBottomSheet<Room?>(
+                  context: context,
+                  useRootNavigator: true,
+                  overlayStyle: SystemUiOverlayStyle(),
+                  backgroundColor: Colors.transparent,
+                  builder: (context) => AddMessageModal(),
+                ).then((value) {
+                  if (value != null) {
+                    showCupertinoModalBottomSheet(
+                        context: context,
+                        useRootNavigator: true,
+                        overlayStyle: SystemUiOverlayStyle(),
+                        builder: (context) => MessageScreen(room: value));
+                  }
+                });
               },
               onPitch: () {},
               onToss: () {},
@@ -339,7 +349,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     handleAndroidBackButtonPress: true, // Default is true.
                     resizeToAvoidBottomInset:
                         true, // This needs to be true if you want to move up the screen when keyboard appears. Default is true.
-                    stateManagement: true, // Default is true.
+                    selectedTabScreenContext: (p0) {
+                      selectedTabScreenContext = p0;
+                    },
                     hideNavigationBarWhenKeyboardShows:
                         true, // Recommended to set 'resizeToAvoidBottomInset' as true while using this argument. Default is true.
                     decoration: NavBarDecoration(
@@ -357,27 +369,29 @@ class _HomeScreenState extends State<HomeScreen> {
                       duration: Duration(milliseconds: 200),
                       curve: Curves.ease,
                     ),
-                    screenTransitionAnimation: ScreenTransitionAnimation(
-                      // Screen transition animation on change of selected tab.
-                      animateTabTransition: true,
-                      curve: Curves.ease,
-                      duration: Duration(milliseconds: 200),
-                    ),
+                    // screenTransitionAnimation: ScreenTransitionAnimation(
+                    //   // Screen transition animation on change of selected tab.
+                    //   animateTabTransition: true,
+                    //   curve: Curves.ease,
+                    //   duration: Duration(milliseconds: 10),
+                    // ),
                     navBarStyle: NavBarStyle
                         .style15, // Choose the nav bar style with this property.
                   ),
-                  AtlyAppbar(
-                    onAction1: () {
-                      _key.currentState!.openDrawer();
+                  BlocBuilder<AppbarSubtitleCubit, String>(
+                    builder: (_, state) {
+                      return AtlyAppbar(
+                        inverted: state == 'Home',
+                        onAction1: () {
+                          _key.currentState!.openDrawer();
+                        },
+                        onAction2: () {},
+                        subtitle: state == 'Home'
+                            ? null
+                            : AtlyAppbarSubtitle(subtitle: state),
+                      );
                     },
-                    onAction2: () {},
-                    onAction3: () {},
-                    subtitle: BlocBuilder<AppbarSubtitleCubit, String>(
-                      builder: (context, state) {
-                        return AtlyAppbarSubtitle(subtitle: state);
-                      },
-                    ),
-                  )
+                  ),
                 ],
               ),
             ),
