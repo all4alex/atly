@@ -65,6 +65,8 @@ dependencies:
   stream_transform: ^2.1.0
   uuid: ^3.0.6
   flutter_link_previewer: ^3.2.0
+  syncfusion_flutter_datepicker: ^20.4.54
+  flutter_countdown_timer: ^4.1.0
 
 dev_dependencies:
   flutter_facebook_auth: ^4.4.1

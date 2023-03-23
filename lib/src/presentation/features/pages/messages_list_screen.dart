@@ -53,7 +53,20 @@ class _MessageScreenState extends State<MessageListScreen> {
       backgroundColor: AppColors.appBlue,
       body: SafeArea(
         child: Container(
-          color: AppColors.appWhite,
+          decoration: const BoxDecoration(
+            color: AppColors.appWhite,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey,
+                blurRadius: 15.0, // soften the shadow
+                spreadRadius: 5.0, //extend the shadow
+                offset: Offset(
+                  5.0, // Move to right 5  horizontally
+                  5.0, // Move to bottom 5 Vertically
+                ),
+              )
+            ],
+          ),
           child: Column(
             children: [
               AtlyAppbarV2(
@@ -77,10 +90,16 @@ class _MessageScreenState extends State<MessageListScreen> {
                       }
                       if (snapshot.hasData) {
                         rooms = snapshot.data!;
+                        rooms.removeWhere(
+                            (element) => element.lastMessages == null);
                         return rooms.isNotEmpty
                             ? ListView.separated(
                                 itemBuilder: (context, index) {
                                   types.Room room = rooms[index];
+                                  if (room.lastMessages == null) {
+                                    return SizedBox();
+                                  } else {}
+
                                   return InkWell(
                                       onTap: () async {
                                         showCupertinoModalBottomSheet(
@@ -106,7 +125,7 @@ class _MessageScreenState extends State<MessageListScreen> {
                                               ),
                                         ),
                                         subtitle: Text(
-                                          getLastMessage(room),
+                                          getLastMessageSText(room),
                                           style: Theme.of(context)
                                               .textTheme
                                               .labelSmall!

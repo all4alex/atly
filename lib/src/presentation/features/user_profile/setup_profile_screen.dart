@@ -1,11 +1,14 @@
 import 'package:atly/src/app/app.dart';
 import 'package:atly/src/data/services/api/user_service.dart';
+import 'package:atly/src/presentation/widgets/atly_datepicker.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:intl/intl.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 import '../../../app/app_colors.dart';
 import '../../../app/app_text.dart';
@@ -34,6 +37,14 @@ class _SetupProfileScreenState extends State<SetupProfileScreen> {
   String? bday;
   String? country;
   String? city;
+  final dateController = TextEditingController();
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is removed
+    dateController.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -168,8 +179,8 @@ class _SetupProfileScreenState extends State<SetupProfileScreen> {
                   ),
                   Gap(10),
                   TextFormField(
-                    keyboardType: TextInputType.phone,
-                    enabled: false,
+                    keyboardType: TextInputType.none,
+                    controller: dateController,
                     decoration: InputDecoration(
                       hintText: "Birthday",
                       filled: true,
@@ -185,12 +196,23 @@ class _SetupProfileScreenState extends State<SetupProfileScreen> {
                         borderSide: BorderSide(color: AppColors.appGrey),
                       ),
                     ),
-                    // validator: (value) {
-                    //   if (value!.isEmpty) {
-                    //     return "Birthday can't be empty";
-                    //   }
-                    //   return null;
-                    // },
+                    onTap: () async {
+                      var date = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime(2000),
+                          firstDate: DateTime(1800),
+                          lastDate: DateTime(2000));
+                      if (date != null) {
+                        dateController.text =
+                            DateFormat('MMMM dd, yyyy').format(date);
+                      }
+                    },
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return "Birthday can't be empty";
+                      }
+                      return null;
+                    },
                     onSaved: (newValue) => bday = newValue,
                   ),
                   Gap(10),

@@ -16,7 +16,7 @@ import '../../../app/app_strings.dart';
 import '../../../app/app_text.dart';
 import '../../../data/models/user_profile_model.dart';
 import '../pages/message_screen.dart';
-import 'cubit/register_cubit.dart';
+import './register/register_cubit.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);

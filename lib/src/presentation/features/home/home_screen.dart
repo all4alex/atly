@@ -7,6 +7,7 @@ import 'package:atly/src/data/services/api/user_service.dart';
 import 'package:atly/src/presentation/features/login/cubit/login_cubit.dart';
 import 'package:atly/src/presentation/features/login/login_screen.dart';
 import 'package:atly/src/presentation/features/pages/callendar_screen.dart';
+import 'package:atly/src/presentation/features/pages/cubit/chat_cubit.dart';
 import 'package:atly/src/presentation/features/pages/dashboard_screen.dart';
 import 'package:atly/src/presentation/features/pages/messages_list_screen.dart';
 import 'package:atly/src/presentation/features/pages/modals/bottom_modal/add_message_modal.dart';
@@ -191,7 +192,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   useRootNavigator: true,
                   overlayStyle: SystemUiOverlayStyle(),
                   backgroundColor: Colors.transparent,
-                  builder: (context) => AddMessageModal(),
+                  builder: (context) => BlocProvider(
+                    create: (context) => ChatCubit(),
+                    child: AddMessageModal(),
+                  ),
                 ).then((value) {
                   if (value != null) {
                     showCupertinoModalBottomSheet(

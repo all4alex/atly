@@ -1,11 +1,7 @@
-import 'dart:ui';
-
 import 'package:atly/src/utilities/logger.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
-import 'package:flutter_chat_ui/flutter_chat_ui.dart';
-import 'package:intl/intl.dart';
 
 import '../app/app_colors.dart';
 
@@ -38,16 +34,19 @@ String getChatTitle(types.Room room) {
   return room.name ?? allUsers;
 }
 
-String getLastMessage(types.Room room) {
-  String lastMessage = '';
-
+String getLastMessageSText(types.Room room) {
   if (room.lastMessages != null) {
-    types.TextMessage textMessage =
-        room.lastMessages!.first as types.TextMessage;
-
-    lastMessage = textMessage.text;
+    types.Message lastMessage = room.lastMessages!.first;
+    if (lastMessage.type.name == 'text') {
+      types.TextMessage textMessage = lastMessage as types.TextMessage;
+      return textMessage.text;
+    } else if (lastMessage.type.name == 'image') {
+      types.ImageMessage imageMessage =
+          room.lastMessages!.first as types.ImageMessage;
+      return '${imageMessage.author.firstName} sent a photo';
+    }
   }
-  return lastMessage;
+  return '';
 }
 
 Widget buildAvatar(types.Room room) {
@@ -62,7 +61,7 @@ Widget buildAvatar(types.Room room) {
       backgroundImage: hasImage
           ? CachedNetworkImageProvider(room.imageUrl!)
           : CachedNetworkImageProvider('https://i.pravatar.cc/300'),
-      radius: 20,
+      radius: 25,
       child: !hasImage
           ? Text(
               name.isEmpty ? '' : name[0].toUpperCase(),

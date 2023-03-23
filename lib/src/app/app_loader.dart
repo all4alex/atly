@@ -8,5 +8,6 @@ class AppLoader {
     loaderColorOne: AppColors.appBlue,
     loaderColorTwo: AppColors.appPink,
     loaderColorThree: AppColors.appYellow,
+    duration: Duration(seconds: 10),
   );
 }
