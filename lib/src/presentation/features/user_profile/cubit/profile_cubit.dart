@@ -1,7 +1,7 @@
 import 'package:atly/main.dart';
 import 'package:atly/src/app/atly_app.dart';
 import 'package:atly/src/data/models/user_profile_model.dart';
-import 'package:atly/src/data/services/api/user_service.dart';
+import 'package:atly/src/data/services/remote/user_service.dart';
 import 'package:atly/src/data/services/local/secure_storage_service.dart';
 import 'package:atly/src/utilities/logger.dart';
 import 'package:bloc/bloc.dart';

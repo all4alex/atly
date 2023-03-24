@@ -3,11 +3,6 @@ enum EventInviteStatus {
   respond,
 }
 
-enum MessageType {
-  direct,
-  group,
-}
-
 extension EventInviteStatusExtension on EventInviteStatus {
   String get displayMessage {
     switch (this) {
@@ -19,6 +14,11 @@ extension EventInviteStatusExtension on EventInviteStatus {
         return 'Message';
     }
   }
+}
+
+enum MessageType {
+  direct,
+  group,
 }
 
 extension MessageTypeExtension on MessageType {

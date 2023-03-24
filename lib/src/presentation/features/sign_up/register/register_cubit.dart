@@ -1,4 +1,4 @@
-import 'package:atly/src/data/services/api/user_service.dart';
+import 'package:atly/src/data/services/remote/user_service.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';

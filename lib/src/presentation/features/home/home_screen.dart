@@ -3,7 +3,7 @@ import 'package:atly/src/app/app_loader.dart';
 import 'package:atly/src/app/app_strings.dart';
 import 'package:atly/src/app/app_text.dart';
 import 'package:atly/src/data/models/user_profile_model.dart';
-import 'package:atly/src/data/services/api/user_service.dart';
+import 'package:atly/src/data/services/remote/user_service.dart';
 import 'package:atly/src/presentation/features/login/cubit/login_cubit.dart';
 import 'package:atly/src/presentation/features/login/login_screen.dart';
 import 'package:atly/src/presentation/features/pages/callendar_screen.dart';
@@ -36,6 +36,7 @@ import '../pages/friend_list_screen.dart';
 import '../pages/message_screen.dart';
 import '../pages/notification_screen.dart';
 import '../../widgets/atly_appbar.dart';
+import 'cubit/cubit/notification_cubit.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -59,6 +60,9 @@ class HomeScreen extends StatefulWidget {
                   ),
                   BlocProvider(
                     create: (context) => AppbarSubtitleCubit(),
+                  ),
+                  BlocProvider(
+                    create: (context) => NotificationCubit(),
                   ),
                 ],
                 child: HomeScreen(),

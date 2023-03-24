@@ -1,4 +1,4 @@
-import 'package:atly/src/data/services/api/user_service.dart';
+import 'package:atly/src/data/services/remote/user_service.dart';
 import 'package:atly/src/data/services/local/local_storage_service.dart';
 import 'package:atly/src/presentation/features/sign_up/register/register_cubit.dart';
 import 'package:atly/src/presentation/features/sign_up/register_screen.dart';
