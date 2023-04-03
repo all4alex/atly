@@ -98,6 +98,9 @@ class _MessageScreenState extends State<MessageScreen> {
                           secondaryColor: AppColors.appWhite,
                           backgroundColor: AppColors.appOriginalWhite,
                           inputContainerDecoration: BoxDecoration(),
+                          inputBorderRadius: BorderRadius.circular(30),
+                          inputMargin:
+                              EdgeInsets.only(bottom: 10, left: 15, right: 15),
                           receivedMessageBodyTextStyle: AppText.body2
                               .copyWith(color: AppColors.iconGrey)),
                       user: types.User(

@@ -54,17 +54,20 @@ Widget buildAvatar(types.Room room) {
 
   final hasImage = room.imageUrl != null;
   final name = room.name ?? '';
+  final nameAvatar = room.users.first.firstName!.split('')[0].toUpperCase() +
+      room.users.first.lastName!.split('')[0].toUpperCase();
 
   return Container(
     child: CircleAvatar(
-      backgroundColor: hasImage ? AppColors.appOrange : color,
-      backgroundImage: hasImage
-          ? CachedNetworkImageProvider(room.imageUrl!)
-          : CachedNetworkImageProvider('https://i.pravatar.cc/300'),
+      backgroundColor: hasImage
+          ? AppColors.appOrange
+          : getUserAvatarNameColor(room.users.first),
+      backgroundImage:
+          hasImage ? CachedNetworkImageProvider(room.imageUrl!) : null,
       radius: 25,
       child: !hasImage
           ? Text(
-              name.isEmpty ? '' : name[0].toUpperCase(),
+              name.isEmpty ? '' : nameAvatar,
               style: const TextStyle(color: Colors.white),
             )
           : null,
