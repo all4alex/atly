@@ -15,3 +15,21 @@ extension EventInviteStatusExtension on EventInviteStatus {
     }
   }
 }
+
+enum MessageType {
+  direct,
+  group,
+}
+
+extension MessageTypeExtension on MessageType {
+  String get displayMessage {
+    switch (this) {
+      case MessageType.direct:
+        return 'Message';
+      case MessageType.group:
+        return 'Group';
+      default:
+        return 'Message';
+    }
+  }
+}

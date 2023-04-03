@@ -1,11 +1,14 @@
 import 'package:atly/main.dart';
+import 'package:atly/src/app/app_loader.dart';
 import 'package:atly/src/app/app_strings.dart';
+import 'package:atly/src/app/app_svg_icons.dart';
 import 'package:atly/src/app/app_text.dart';
 import 'package:atly/src/data/models/user_profile_model.dart';
-import 'package:atly/src/data/services/api/user_service.dart';
+import 'package:atly/src/data/services/remote/user_service.dart';
 import 'package:atly/src/presentation/features/login/cubit/login_cubit.dart';
 import 'package:atly/src/presentation/features/login/login_screen.dart';
 import 'package:atly/src/presentation/features/pages/callendar_screen.dart';
+import 'package:atly/src/presentation/features/pages/cubit/chat_cubit.dart';
 import 'package:atly/src/presentation/features/pages/dashboard_screen.dart';
 import 'package:atly/src/presentation/features/pages/messages_list_screen.dart';
 import 'package:atly/src/presentation/features/pages/modals/bottom_modal/add_message_modal.dart';
@@ -20,6 +23,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
 import 'package:getwidget/getwidget.dart';
@@ -34,6 +38,7 @@ import '../pages/friend_list_screen.dart';
 import '../pages/message_screen.dart';
 import '../pages/notification_screen.dart';
 import '../../widgets/atly_appbar.dart';
+import 'cubit/cubit/notification_cubit.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -57,6 +62,9 @@ class HomeScreen extends StatefulWidget {
                   ),
                   BlocProvider(
                     create: (context) => AppbarSubtitleCubit(),
+                  ),
+                  BlocProvider(
+                    create: (context) => NotificationCubit(),
                   ),
                 ],
                 child: HomeScreen(),
@@ -94,14 +102,32 @@ class _HomeScreenState extends State<HomeScreen> {
     List<PersistentBottomNavBarItem> _navBarsItems() {
       return [
         PersistentBottomNavBarItem(
-          icon: Icon(Icons.home),
-          activeColorPrimary: AppColors.iconBlue,
-          inactiveColorPrimary: AppColors.iconGrey,
+          icon: SvgPicture.asset(
+            AppSvgAssetLocation.home,
+            height: 30,
+            width: 30,
+            color: AppColors.appBlue,
+          ),
+          inactiveIcon: SvgPicture.asset(
+            AppSvgAssetLocation.home,
+            height: 30,
+            width: 30,
+            color: AppColors.appMainGrey,
+          ),
         ),
         PersistentBottomNavBarItem(
-          icon: Icon(Icons.people),
-          activeColorPrimary: AppColors.iconBlue,
-          inactiveColorPrimary: AppColors.iconGrey,
+          icon: SvgPicture.asset(
+            AppSvgAssetLocation.people,
+            height: 30,
+            width: 30,
+            color: AppColors.appBlue,
+          ),
+          inactiveIcon: SvgPicture.asset(
+            AppSvgAssetLocation.people,
+            height: 30,
+            width: 30,
+            color: AppColors.appMainGrey,
+          ),
         ),
         PersistentBottomNavBarItem(
             activeColorPrimary: Colors.transparent,
@@ -131,16 +157,85 @@ class _HomeScreenState extends State<HomeScreen> {
             // )
             ),
         PersistentBottomNavBarItem(
-          icon: Icon(FontAwesomeIcons.calendarCheck),
-          activeColorPrimary: AppColors.iconBlue,
-          inactiveColorPrimary: AppColors.iconGrey,
+          icon: SvgPicture.asset(
+            AppSvgAssetLocation.calendar,
+            height: 30,
+            width: 30,
+            color: AppColors.appBlue,
+          ),
+          inactiveIcon: SvgPicture.asset(
+            AppSvgAssetLocation.calendar,
+            height: 30,
+            width: 30,
+            color: AppColors.appMainGrey,
+          ),
         ),
         PersistentBottomNavBarItem(
-          icon: Icon(FontAwesomeIcons.solidBell),
-          activeColorPrimary: AppColors.iconBlue,
-          inactiveColorPrimary: AppColors.iconGrey,
+          icon: SvgPicture.asset(
+            AppSvgAssetLocation.bell,
+            height: 30,
+            width: 30,
+            color: AppColors.appBlue,
+          ),
+          inactiveIcon: SvgPicture.asset(
+            AppSvgAssetLocation.bell,
+            height: 30,
+            width: 30,
+            color: AppColors.appMainGrey,
+          ),
         ),
       ];
+    }
+
+    void _showBottomModal(BuildContext context) {
+      showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Container(
+            padding: EdgeInsets.all(16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                GFButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    print('Event button pressed');
+                  },
+                  text: 'Event',
+                  shape: GFButtonShape.pills,
+                ),
+                SizedBox(height: 8),
+                GFButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    print('Pitch button pressed');
+                  },
+                  text: 'Pitch',
+                  shape: GFButtonShape.pills,
+                ),
+                SizedBox(height: 8),
+                GFButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    print('Message button pressed');
+                  },
+                  text: 'Message',
+                  shape: GFButtonShape.pills,
+                ),
+              ],
+            ),
+          );
+        },
+      );
+    }
+
+    void _showBottomDialog(BuildContext context) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return BottomDialog();
+        },
+      );
     }
 
     return MultiBlocListener(
@@ -179,31 +274,55 @@ class _HomeScreenState extends State<HomeScreen> {
           drawerEnableOpenDragGesture: false,
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerFloat,
-          floatingActionButton: Padding(
-            padding: const EdgeInsets.only(bottom: 5),
-            child: NavSpeedDial(
-              onBlast: () {},
-              onEvent: () {},
-              onMessage: () async {
-                await showCupertinoModalBottomSheet<Room?>(
-                  context: context,
-                  useRootNavigator: true,
-                  overlayStyle: SystemUiOverlayStyle(),
-                  backgroundColor: Colors.transparent,
-                  builder: (context) => AddMessageModal(),
-                ).then((value) {
-                  if (value != null) {
-                    showCupertinoModalBottomSheet(
-                        context: context,
-                        useRootNavigator: true,
-                        overlayStyle: SystemUiOverlayStyle(),
-                        builder: (context) => MessageScreen(room: value));
-                  }
-                });
-              },
-              onPitch: () {},
-              onToss: () {},
-            ),
+          floatingActionButton: Container(
+            width: 60,
+            height: 60,
+            child: GFButton(
+                onPressed: () => _showBottomDialog(context),
+                child: Icon(
+                  Icons.add,
+                  color: AppColors.appGrey,
+                  size: 35,
+                ),
+                color: AppColors.appOriginalWhite,
+                boxShadow: BoxShadow(
+                  color: Colors.grey,
+                  blurRadius: 3.0, // soften the shadow
+                  spreadRadius: 1.0, //extend the shadow
+                  offset: Offset(
+                    0.0, // Move to right 5  horizontally
+                    3.0, // Move to bottom 5 Vertically
+                  ),
+                ),
+                shape: GFButtonShape.pills),
+
+            //  NavSpeedDial(
+            //   onBlast: () {},
+            //   onEvent: () {},
+            //   onMessage: () async {
+            //     await showCupertinoModalBottomSheet(
+            //       context: context,
+            //       useRootNavigator: true,
+            //       overlayStyle: SystemUiOverlayStyle(),
+            //       backgroundColor: Colors.transparent,
+            //       builder: (context) => BlocProvider(
+            //         create: (context) => ChatCubit(),
+            //         child: AddMessageModal(),
+            //       ),
+            //     ).then((value) {
+            //       if (value != null) {
+            //         showCupertinoModalBottomSheet(
+            //             context: context,
+            //             useRootNavigator: true,
+            //             overlayStyle: SystemUiOverlayStyle(),
+            //             builder: (context) => MessageScreen(room: value));
+            //       }
+            //       return;
+            //     });
+            //   },
+            //   onPitch: () {},
+            //   onToss: () {},
+            // ),
           ),
           drawer: GFDrawer(
             child: BlocBuilder<ProfileCubit, ProfileState>(
@@ -284,7 +403,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         BlocBuilder<LoginCubit, LoginState>(
                           builder: (context, state) {
                             if (state is LogoutLoading) {
-                              return CircularProgressIndicator();
+                              return AppLoader.loaderOne;
                             }
                             return ListTile(
                               title: Text(AppString.logout,
@@ -327,15 +446,15 @@ class _HomeScreenState extends State<HomeScreen> {
                           break;
                         case 2:
                           BlocProvider.of<AppbarSubtitleCubit>(context)
-                              .updateAppbarSubtitle('Callendar');
+                              .updateAppbarSubtitle('');
                           break;
                         case 3:
                           BlocProvider.of<AppbarSubtitleCubit>(context)
-                              .updateAppbarSubtitle('Notification');
+                              .updateAppbarSubtitle('Callendar');
                           break;
                         case 4:
                           BlocProvider.of<AppbarSubtitleCubit>(context)
-                              .updateAppbarSubtitle('Messages');
+                              .updateAppbarSubtitle('Notification');
                           break;
                         default:
                           BlocProvider.of<AppbarSubtitleCubit>(context)
@@ -396,6 +515,97 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           )),
+    );
+  }
+}
+
+class BottomDialog extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding:
+          EdgeInsets.only(bottom: MediaQuery.of(context).size.height * 0.1),
+      child: Align(
+        alignment: Alignment.bottomCenter,
+        child: Container(
+          padding: EdgeInsets.all(5),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(16),
+              topRight: Radius.circular(16),
+            ),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                height: MediaQuery.of(context).size.width * 0.1,
+                width: MediaQuery.of(context).size.width * 0.5,
+                child: GFButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    print('Event button pressed');
+                  },
+                  text: 'Event',
+                  shape: GFButtonShape.pills,
+                  color: AppColors.appBlue,
+                  textStyle:
+                      AppText.button.copyWith(fontWeight: FontWeight.bold),
+                ),
+              ),
+              Gap(12),
+              SizedBox(
+                height: MediaQuery.of(context).size.width * 0.1,
+                width: MediaQuery.of(context).size.width * 0.5,
+                child: GFButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      print('Pitch button pressed');
+                    },
+                    text: 'Pitch',
+                    shape: GFButtonShape.pills,
+                    color: AppColors.appPink,
+                    textStyle:
+                        AppText.button.copyWith(fontWeight: FontWeight.bold)),
+              ),
+              Gap(12),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.5,
+                height: MediaQuery.of(context).size.width * 0.1,
+                child: GFButton(
+                    onPressed: () async {
+                      await showCupertinoModalBottomSheet(
+                        context: context,
+                        useRootNavigator: true,
+                        overlayStyle: SystemUiOverlayStyle(),
+                        backgroundColor: Colors.transparent,
+                        builder: (context) => BlocProvider(
+                          create: (context) => ChatCubit(),
+                          child: AddMessageModal(),
+                        ),
+                      ).then((value) {
+                        if (value != null) {
+                          showCupertinoModalBottomSheet(
+                              context: context,
+                              useRootNavigator: true,
+                              overlayStyle: SystemUiOverlayStyle(),
+                              builder: (context) => MessageScreen(room: value));
+                        }
+                        return;
+                      });
+                    },
+                    text: 'Message',
+                    shape: GFButtonShape.pills,
+                    color: AppColors.appWhite,
+                    textStyle: AppText.button.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.iconBlue,
+                    )),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

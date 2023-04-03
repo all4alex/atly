@@ -20,12 +20,12 @@ class ChatCubit extends Cubit<ChatState> {
     }
   }
 
-  void createGroupChat(
-      List<types.User> otherUsers, BuildContext context) async {
+  void createGroupChat(List<types.User> otherUsers, String groupName,
+      BuildContext context) async {
     emit(OnCreateChatLoading());
     try {
       final types.Room room = await FirebaseChatCore.instance
-          .createGroupRoom(users: otherUsers, name: '');
+          .createGroupRoom(users: otherUsers, name: groupName);
       emit(OnCreateChatSuccess(room: room));
     } catch (e) {
       emit(OnCreateChatFailed());

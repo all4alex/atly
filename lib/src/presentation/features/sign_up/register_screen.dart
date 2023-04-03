@@ -1,5 +1,5 @@
 import 'package:atly/main.dart';
-import 'package:atly/src/data/services/api/user_service.dart';
+import 'package:atly/src/data/services/remote/user_service.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +16,7 @@ import '../../../app/app_strings.dart';
 import '../../../app/app_text.dart';
 import '../../../data/models/user_profile_model.dart';
 import '../pages/message_screen.dart';
-import 'cubit/register_cubit.dart';
+import './register/register_cubit.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -281,7 +281,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                               borderRadius:
                                                   BorderRadius.circular(50))),
                                       child: state is RegisterLoding
-                                          ? const CircularProgressIndicator()
+                                          ? const GFLoader(
+                                              type: GFLoaderType.circle)
                                           : Text(AppString.createAccount,
                                               style: Theme.of(context)
                                                   .textTheme

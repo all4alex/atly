@@ -1,12 +1,7 @@
-import 'dart:math';
-
-import 'package:atly/src/data/models/user_profile_model.dart';
-import 'package:atly/src/data/services/api/user_service.dart';
+import 'package:atly/src/data/services/remote/user_service.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
-import '../../../../data/services/local/secure_storage_service.dart';
 
 part 'register_state.dart';
 
@@ -26,14 +21,6 @@ class RegisterCubit extends Cubit<RegisterState> {
 
       emit(RegisterSuccess(userCredential: credential));
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        emit(RegisterFailed(error: 'Weak Password'));
-      } else if (e.code == 'email-already-in-use') {
-        emit(RegisterFailed(error: 'Email already in use'));
-      }
-      print(e.message);
-      print(e.code);
-
       emit(RegisterFailed(error: e.message ?? 'Something went wrong.'));
     } catch (e) {
       emit(RegisterFailed(error: e.toString()));

@@ -1,9 +1,7 @@
-import 'dart:ui';
-
+import 'package:atly/src/utilities/logger.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
-import 'package:intl/intl.dart';
 
 import '../app/app_colors.dart';
 
@@ -30,10 +28,25 @@ String getUserName(types.User user) =>
 
 String getChatTitle(types.Room room) {
   String allUsers = '';
-  for (var element in room.users) {
-    allUsers = '$allUsers${element.firstName}, ';
+  for (types.User user in room.users) {
+    allUsers = '$allUsers${user.firstName}, ';
   }
-  return room.name!.isEmpty ? allUsers : room.name!;
+  return room.name ?? allUsers;
+}
+
+String getLastMessageSText(types.Room room) {
+  if (room.lastMessages != null) {
+    types.Message lastMessage = room.lastMessages!.first;
+    if (lastMessage.type.name == 'text') {
+      types.TextMessage textMessage = lastMessage as types.TextMessage;
+      return textMessage.text;
+    } else if (lastMessage.type.name == 'image') {
+      types.ImageMessage imageMessage =
+          room.lastMessages!.first as types.ImageMessage;
+      return '${imageMessage.author.firstName} sent a photo';
+    }
+  }
+  return '';
 }
 
 Widget buildAvatar(types.Room room) {
@@ -41,17 +54,20 @@ Widget buildAvatar(types.Room room) {
 
   final hasImage = room.imageUrl != null;
   final name = room.name ?? '';
+  final nameAvatar = room.users.first.firstName!.split('')[0].toUpperCase() +
+      room.users.first.lastName!.split('')[0].toUpperCase();
 
   return Container(
     child: CircleAvatar(
-      backgroundColor: hasImage ? AppColors.appOrange : color,
-      backgroundImage: hasImage
-          ? CachedNetworkImageProvider(room.imageUrl!)
-          : CachedNetworkImageProvider('https://i.pravatar.cc/300'),
-      radius: 20,
+      backgroundColor: hasImage
+          ? AppColors.appOrange
+          : getUserAvatarNameColor(room.users.first),
+      backgroundImage:
+          hasImage ? CachedNetworkImageProvider(room.imageUrl!) : null,
+      radius: 25,
       child: !hasImage
           ? Text(
-              name.isEmpty ? '' : name[0].toUpperCase(),
+              name.isEmpty ? '' : nameAvatar,
               style: const TextStyle(color: Colors.white),
             )
           : null,

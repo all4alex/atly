@@ -10,6 +10,7 @@ import 'package:gap/gap.dart';
 import 'package:getwidget/getwidget.dart';
 
 import '../../../app/app_colors.dart';
+import '../../../app/app_loader.dart';
 import '../../../app/app_text.dart';
 import '../pages/message_screen.dart';
 import '../sign_up/register_screen.dart';
@@ -105,7 +106,7 @@ class _LoginScreenState extends State<LoginScreen> {
               child: BlocBuilder<LoginCubit, LoginState>(
                 builder: (context, state) {
                   if (state is LoginCheckingAuth) {
-                    return const Center(child: CircularProgressIndicator());
+                    return Center(child: AppLoader.loaderOne);
                   }
                   return SingleChildScrollView(
                     child: Form(
@@ -233,7 +234,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                             borderRadius:
                                                 BorderRadius.circular(50))),
                                     child: state is LoginLoading
-                                        ? const CircularProgressIndicator()
+                                        ? const GFLoader(
+                                            type: GFLoaderType.circle)
                                         : Text('Log In',
                                             style: Theme.of(context)
                                                 .textTheme

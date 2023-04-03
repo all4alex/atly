@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:atly/src/app/app_colors.dart';
 import 'package:atly/src/app/app_text.dart';
+import 'package:atly/src/utilities/logger.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,7 @@ import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../../../utilities/chat_util.dart';
+import 'modals/bottom_modal/chat_attachement_modal.dart';
 
 class MessageScreen extends StatefulWidget {
   const MessageScreen({
@@ -31,6 +33,13 @@ class MessageScreen extends StatefulWidget {
 
 class _MessageScreenState extends State<MessageScreen> {
   bool _isAttachmentUploading = false;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    logger().d(widget.room);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,9 +74,6 @@ class _MessageScreenState extends State<MessageScreen> {
                     IconButton(onPressed: () {}, icon: Icon(Icons.more_horiz)),
               ),
             ),
-            Divider(
-              thickness: 2,
-            ),
             Expanded(
               child: Container(
                 color: AppColors.appGrey,
@@ -82,9 +88,9 @@ class _MessageScreenState extends State<MessageScreen> {
                       showUserAvatars: true,
                       isAttachmentUploading: _isAttachmentUploading,
                       messages: snapshot.data ?? [],
+                      usePreviewData: true,
                       onAttachmentPressed: _handleAtachmentPressed,
                       onMessageTap: _handleMessageTap,
-                      onMessageVisibilityChanged: (p0, visible) {},
                       onPreviewDataFetched: _handlePreviewDataFetched,
                       onSendPressed: _handleSendPressed,
                       theme: DefaultChatTheme(
@@ -93,6 +99,9 @@ class _MessageScreenState extends State<MessageScreen> {
                           secondaryColor: AppColors.appWhite,
                           backgroundColor: AppColors.appOriginalWhite,
                           inputContainerDecoration: BoxDecoration(),
+                          inputBorderRadius: BorderRadius.circular(30),
+                          inputMargin:
+                              EdgeInsets.only(bottom: 10, left: 15, right: 15),
                           receivedMessageBodyTextStyle: AppText.body2
                               .copyWith(color: AppColors.iconGrey)),
                       user: types.User(
@@ -110,47 +119,71 @@ class _MessageScreenState extends State<MessageScreen> {
   }
 
   void _handleAtachmentPressed() {
-    showModalBottomSheet<void>(
+    showDialog(
       context: context,
-      builder: (BuildContext context) => SafeArea(
-        child: Container(
-          height: 144,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  _handleImageSelection();
-                },
-                child: const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text('Photo'),
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  _handleFileSelection();
-                },
-                child: const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text('File'),
-                ),
-              ),
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text('Cancel'),
-                ),
-              ),
-            ],
+      builder: (BuildContext context) {
+        return Align(
+          alignment: Alignment.bottomLeft,
+          child: ChatAttachementModal(
+            onPressedButton1: () {
+              // Handle button 1 press
+              Navigator.of(context).pop();
+            },
+            onPressedButton2: () {
+              // Handle button 2 press
+              Navigator.of(context).pop();
+            },
+            onPressedButton3: () {
+              // Handle button 3 press
+              Navigator.of(context).pop();
+            },
           ),
-        ),
-      ),
+        );
+      },
     );
   }
+  // void _handleAtachmentPressed() {
+  //   showModalBottomSheet<void>(
+  //     context: context,
+  //     builder: (BuildContext context) => SafeArea(
+  //       child: Container(
+  //         height: 144,
+  //         child: Column(
+  //           crossAxisAlignment: CrossAxisAlignment.stretch,
+  //           children: <Widget>[
+  //             TextButton(
+  //               onPressed: () {
+  //                 Navigator.pop(context);
+  //                 _handleImageSelection();
+  //               },
+  //               child: const Align(
+  //                 alignment: Alignment.centerLeft,
+  //                 child: Text('Photo'),
+  //               ),
+  //             ),
+  //             TextButton(
+  //               onPressed: () {
+  //                 Navigator.pop(context);
+  //                 _handleFileSelection();
+  //               },
+  //               child: const Align(
+  //                 alignment: Alignment.centerLeft,
+  //                 child: Text('File'),
+  //               ),
+  //             ),
+  //             TextButton(
+  //               onPressed: () => Navigator.pop(context),
+  //               child: const Align(
+  //                 alignment: Alignment.centerLeft,
+  //                 child: Text('Cancel'),
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   void _handleFileSelection() async {
     final result = await FilePicker.platform.pickFiles(

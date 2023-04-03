@@ -1,5 +1,6 @@
-import 'package:atly/src/data/services/api/user_service.dart';
+import 'package:atly/src/data/services/remote/user_service.dart';
 import 'package:atly/src/data/services/local/local_storage_service.dart';
+import 'package:atly/src/presentation/features/sign_up/register/register_cubit.dart';
 import 'package:atly/src/presentation/features/sign_up/register_screen.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -12,7 +13,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../presentation/features/home/home_screen.dart';
 import '../presentation/features/login/cubit/login_cubit.dart';
-import '../presentation/features/sign_up/cubit/register_cubit.dart';
 import '../presentation/features/user_profile/setup_profile_screen.dart';
 import 'app_colors.dart';
 
