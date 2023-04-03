@@ -17,6 +17,7 @@ import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../../../utilities/chat_util.dart';
+import 'modals/bottom_modal/chat_attachement_modal.dart';
 
 class MessageScreen extends StatefulWidget {
   const MessageScreen({
@@ -118,47 +119,71 @@ class _MessageScreenState extends State<MessageScreen> {
   }
 
   void _handleAtachmentPressed() {
-    showModalBottomSheet<void>(
+    showDialog(
       context: context,
-      builder: (BuildContext context) => SafeArea(
-        child: Container(
-          height: 144,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  _handleImageSelection();
-                },
-                child: const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text('Photo'),
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  _handleFileSelection();
-                },
-                child: const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text('File'),
-                ),
-              ),
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text('Cancel'),
-                ),
-              ),
-            ],
+      builder: (BuildContext context) {
+        return Align(
+          alignment: Alignment.bottomLeft,
+          child: ChatAttachementModal(
+            onPressedButton1: () {
+              // Handle button 1 press
+              Navigator.of(context).pop();
+            },
+            onPressedButton2: () {
+              // Handle button 2 press
+              Navigator.of(context).pop();
+            },
+            onPressedButton3: () {
+              // Handle button 3 press
+              Navigator.of(context).pop();
+            },
           ),
-        ),
-      ),
+        );
+      },
     );
   }
+  // void _handleAtachmentPressed() {
+  //   showModalBottomSheet<void>(
+  //     context: context,
+  //     builder: (BuildContext context) => SafeArea(
+  //       child: Container(
+  //         height: 144,
+  //         child: Column(
+  //           crossAxisAlignment: CrossAxisAlignment.stretch,
+  //           children: <Widget>[
+  //             TextButton(
+  //               onPressed: () {
+  //                 Navigator.pop(context);
+  //                 _handleImageSelection();
+  //               },
+  //               child: const Align(
+  //                 alignment: Alignment.centerLeft,
+  //                 child: Text('Photo'),
+  //               ),
+  //             ),
+  //             TextButton(
+  //               onPressed: () {
+  //                 Navigator.pop(context);
+  //                 _handleFileSelection();
+  //               },
+  //               child: const Align(
+  //                 alignment: Alignment.centerLeft,
+  //                 child: Text('File'),
+  //               ),
+  //             ),
+  //             TextButton(
+  //               onPressed: () => Navigator.pop(context),
+  //               child: const Align(
+  //                 alignment: Alignment.centerLeft,
+  //                 child: Text('Cancel'),
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   void _handleFileSelection() async {
     final result = await FilePicker.platform.pickFiles(

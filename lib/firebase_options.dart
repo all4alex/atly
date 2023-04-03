@@ -48,17 +48,17 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyDK1laahQkak18BmydhRxLQ1aIdNbkbOyY',
-    appId: '1:884754944274:web:ab13ae41fd94f6005ae3cb',
+    appId: '1:884754944274:web:f98b9514ac5bd13e5ae3cb',
     messagingSenderId: '884754944274',
     projectId: 'atly-98006',
     authDomain: 'atly-98006.firebaseapp.com',
     storageBucket: 'atly-98006.appspot.com',
-    measurementId: 'G-Y8DLJT859Q',
+    measurementId: 'G-44HBGRF0EB',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyAPIZZWNzoCaPViHm_d1TJHg0AoEH3V11k',
-    appId: '1:884754944274:android:fe5786732c2895235ae3cb',
+    appId: '1:884754944274:android:6aa0ca499e5d48945ae3cb',
     messagingSenderId: '884754944274',
     projectId: 'atly-98006',
     storageBucket: 'atly-98006.appspot.com',
@@ -66,7 +66,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyC8uVRCQDIUYtLNoPTCpAZ6LYeX4yMJxvA',
-    appId: '1:884754944274:ios:bcfd35d143a5145a5ae3cb',
+    appId: '1:884754944274:ios:595ad4440ab5d80c5ae3cb',
     messagingSenderId: '884754944274',
     projectId: 'atly-98006',
     storageBucket: 'atly-98006.appspot.com',
