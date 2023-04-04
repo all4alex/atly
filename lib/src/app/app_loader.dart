@@ -8,6 +8,14 @@ class AppLoader {
     loaderColorOne: AppColors.appBlue,
     loaderColorTwo: AppColors.appPink,
     loaderColorThree: AppColors.appYellow,
-    duration: Duration(seconds: 10),
+    duration: Duration(seconds: 1),
+  );
+
+  static Widget loaderTwo = GFLoader(
+    type: GFLoaderType.circle,
+    loaderColorOne: AppColors.appBlue,
+    loaderColorTwo: AppColors.appBlue.withOpacity(.6),
+    loaderColorThree: AppColors.appBlue.withOpacity(.2),
+    duration: Duration(seconds: 1),
   );
 }

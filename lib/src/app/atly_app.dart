@@ -5,6 +5,7 @@ import 'package:atly/src/presentation/features/sign_up/register_screen.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:atly/src/presentation/features/login/login_screen.dart';
@@ -46,7 +47,10 @@ class _AtlyAppState extends State<AtlyApp> {
           return MaterialApp(
             title: 'Atly',
             debugShowCheckedModeBanner: false,
-            theme: ThemeData(fontFamily: 'Outfit'),
+            theme: ThemeData(
+                brightness: Brightness.light,
+                appBarTheme:
+                    AppBarTheme(systemOverlayStyle: SystemUiOverlayStyle.dark)),
             locale: DevicePreview.locale(context),
             routes: {
               '/': (context) => BlocProvider.value(

@@ -15,6 +15,7 @@ import '../../../app/app_colors.dart';
 import '../../../app/app_strings.dart';
 import '../../../app/app_text.dart';
 import '../../../data/models/user_profile_model.dart';
+import '../../widgets/atly_password_field.dart';
 import '../pages/message_screen.dart';
 import './register/register_cubit.dart';
 
@@ -39,6 +40,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
   String? email = '';
   String? password = '';
+  String? confirmPassword = '';
+
   late RegisterCubit registerCubit;
   UserProfileModel? userProfileModel;
 
@@ -221,44 +224,37 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 //   onSaved: (newValue) => email = newValue,
                                 // ),
                                 const SizedBox(height: 16.0),
-                                TextFormField(
-                                  obscureText: true,
-                                  decoration: InputDecoration(
-                                    hintText: "Password",
-                                    filled: true,
-                                    fillColor: Colors.grey[200],
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(30.0),
-                                      borderSide: BorderSide.none,
-                                    ),
-                                  ),
+                                AtlyPasswordField(
+                                  hintText: "Password",
                                   validator: (value) {
                                     if (value!.isEmpty) {
                                       return "Password can't be empty";
                                     }
                                     return null;
+                                  },
+                                  onChanged: (newValue) {
+                                    password = newValue;
+                                    _formKey.currentState!.validate();
                                   },
                                   onSaved: (newValue) => password = newValue,
                                 ),
                                 const SizedBox(height: 16.0),
-                                TextFormField(
-                                  obscureText: true,
-                                  decoration: InputDecoration(
-                                    hintText: "Confirm Password",
-                                    filled: true,
-                                    fillColor: Colors.grey[200],
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(30.0),
-                                      borderSide: BorderSide.none,
-                                    ),
-                                  ),
+                                AtlyPasswordField(
+                                  hintText: "Confirm Password",
                                   validator: (value) {
                                     if (value!.isEmpty) {
                                       return "Password can't be empty";
+                                    } else if (value != password) {
+                                      return "Password does not match";
                                     }
                                     return null;
                                   },
-                                  onSaved: (newValue) => password = newValue,
+                                  onChanged: (newValue) {
+                                    confirmPassword = newValue;
+                                    _formKey.currentState!.validate();
+                                  },
+                                  onSaved: (newValue) =>
+                                      confirmPassword = newValue,
                                 ),
                                 const SizedBox(height: 16.0),
                                 BlocBuilder<RegisterCubit, RegisterState>(

@@ -22,8 +22,10 @@ class AtlyAppbar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    return Padding(
-      padding: const EdgeInsets.all(15),
+    return Container(
+      padding: const EdgeInsets.only(left: 15, right: 15, top: 50, bottom: 15),
+      alignment: Alignment.bottomCenter,
+      height: size.height * .15,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,

@@ -22,7 +22,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       types.User(
         firstName: firstName,
         id: uid,
-        imageUrl: 'https://i.pravatar.cc/300',
+        imageUrl: '',
         lastName: lastName,
       ),
     );
@@ -56,6 +56,7 @@ class ProfileCubit extends Cubit<ProfileState> {
 
     try {
       final User? user = firebaseAuth.currentUser;
+
       print(user);
       await userService.addUserProfile(
           userProfileModel: userProfileModel, id: user!.uid);

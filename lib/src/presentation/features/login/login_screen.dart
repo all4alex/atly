@@ -12,6 +12,7 @@ import 'package:getwidget/getwidget.dart';
 import '../../../app/app_colors.dart';
 import '../../../app/app_loader.dart';
 import '../../../app/app_text.dart';
+import '../../widgets/atly_password_field.dart';
 import '../pages/message_screen.dart';
 import '../sign_up/register_screen.dart';
 import '../user_profile/setup_profile_screen.dart';
@@ -97,7 +98,7 @@ class _LoginScreenState extends State<LoginScreen> {
             child: BlocListener<LoginCubit, LoginState>(
               listener: (context, state) {
                 if (state is LoginSuccess) {
-                  Navigator.of(context, rootNavigator: true).pushReplacement(
+                  Navigator.of(context).pushReplacement(
                       HomeScreen.route(menuScreenContext: context));
                 } else if (state is LoginFailed) {
                   showErrorMessage(context);
@@ -108,6 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   if (state is LoginCheckingAuth) {
                     return Center(child: AppLoader.loaderOne);
                   }
+
                   return SingleChildScrollView(
                     child: Form(
                       key: _formKey,
@@ -181,17 +183,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                 onSaved: (newValue) => email = newValue,
                               ),
                               const SizedBox(height: 16.0),
-                              TextFormField(
-                                obscureText: true,
-                                decoration: InputDecoration(
-                                  hintText: "Password",
-                                  filled: true,
-                                  fillColor: Colors.grey[200],
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(30.0),
-                                    borderSide: BorderSide.none,
-                                  ),
-                                ),
+                              AtlyPasswordField(
+                                hintText: "Password",
                                 validator: (value) {
                                   if (value!.isEmpty) {
                                     return "Password can't be empty";

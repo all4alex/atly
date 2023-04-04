@@ -13,4 +13,6 @@ class AppString {
   static const String accountsAndProfile = 'Accounts & Profile';
   static const String settings = 'Settings';
   static const String logout = 'Log Out';
+  static const String dummyImageUrl =
+      'https://firebasestorage.googleapis.com/v0/b/atly-98006.appspot.com/o/app_assets%2Fimages%2Fleio-mclaren-L2dTmhQzx4Q-unsplash.jpg?alt=media&token=f65eca68-cb30-4b3f-a6a9-e3ad6526aada';
 }
