@@ -11,6 +11,7 @@ import 'package:atly/src/presentation/features/pages/callendar_screen.dart';
 import 'package:atly/src/presentation/features/pages/cubit/chat_cubit.dart';
 import 'package:atly/src/presentation/features/pages/dashboard_screen.dart';
 import 'package:atly/src/presentation/features/pages/messages_list_screen.dart';
+import 'package:atly/src/presentation/features/pages/modals/bottom_modal/add_action_modal_body.dart';
 import 'package:atly/src/presentation/features/pages/modals/bottom_modal/add_message_modal.dart';
 import 'package:atly/src/presentation/features/pages/modals/bottom_modal/nav_add_modal.dart';
 import 'package:atly/src/presentation/features/user_profile/cubit/profile_cubit.dart';
@@ -232,15 +233,6 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     }
 
-    void _showBottomDialog(BuildContext context) {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return BottomDialog();
-        },
-      );
-    }
-
     return MultiBlocListener(
       listeners: [
         BlocListener<LoginCubit, LoginState>(
@@ -258,7 +250,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 settings: RouteSettings(name: SetupProfileScreen.routeName),
                 screen: BlocProvider.value(
                   value: profileCubit,
-                  child: SetupProfileScreen(),
+                  child: SetupProfileScreen(email: state.email),
                 ),
                 withNavBar: false,
                 pageTransitionAnimation: PageTransitionAnimation.cupertino,
@@ -286,7 +278,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 width: 60,
                 height: 60,
                 child: GFButton(
-                    onPressed: () => _showBottomDialog(context),
+                    onPressed: () => showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AddActionModalBody();
+                          },
+                        ),
                     child: Icon(
                       Icons.add,
                       color: AppColors.appGrey,
@@ -521,97 +518,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ));
         },
-      ),
-    );
-  }
-}
-
-class BottomDialog extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding:
-          EdgeInsets.only(bottom: MediaQuery.of(context).size.height * 0.1),
-      child: Align(
-        alignment: Alignment.bottomCenter,
-        child: Container(
-          padding: EdgeInsets.all(5),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(16),
-              topRight: Radius.circular(16),
-            ),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(
-                height: MediaQuery.of(context).size.width * 0.1,
-                width: MediaQuery.of(context).size.width * 0.5,
-                child: GFButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    print('Event button pressed');
-                  },
-                  text: 'Event',
-                  shape: GFButtonShape.pills,
-                  color: AppColors.appBlue,
-                  textStyle:
-                      AppText.button.copyWith(fontWeight: FontWeight.bold),
-                ),
-              ),
-              Gap(12),
-              SizedBox(
-                height: MediaQuery.of(context).size.width * 0.1,
-                width: MediaQuery.of(context).size.width * 0.5,
-                child: GFButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                      print('Pitch button pressed');
-                    },
-                    text: 'Pitch',
-                    shape: GFButtonShape.pills,
-                    color: AppColors.appPink,
-                    textStyle:
-                        AppText.button.copyWith(fontWeight: FontWeight.bold)),
-              ),
-              Gap(12),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.5,
-                height: MediaQuery.of(context).size.width * 0.1,
-                child: GFButton(
-                    onPressed: () async {
-                      await showCupertinoModalBottomSheet(
-                        context: context,
-                        useRootNavigator: true,
-                        overlayStyle: SystemUiOverlayStyle(),
-                        backgroundColor: Colors.transparent,
-                        builder: (context) => BlocProvider(
-                          create: (context) => ChatCubit(),
-                          child: AddMessageModal(),
-                        ),
-                      ).then((value) {
-                        if (value != null) {
-                          showCupertinoModalBottomSheet(
-                              context: context,
-                              useRootNavigator: true,
-                              overlayStyle: SystemUiOverlayStyle(),
-                              builder: (context) => MessageScreen(room: value));
-                        }
-                        return;
-                      });
-                    },
-                    text: 'Message',
-                    shape: GFButtonShape.pills,
-                    color: AppColors.appWhite,
-                    textStyle: AppText.button.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.iconBlue,
-                    )),
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }

@@ -89,16 +89,31 @@ class _MessageScreenState extends State<MessageScreen> {
                       isAttachmentUploading: _isAttachmentUploading,
                       messages: snapshot.data ?? [],
                       usePreviewData: true,
+                      showUserNames: true,
                       onAttachmentPressed: _handleAtachmentPressed,
                       onMessageTap: _handleMessageTap,
                       onPreviewDataFetched: _handlePreviewDataFetched,
                       onSendPressed: _handleSendPressed,
                       theme: DefaultChatTheme(
-                          inputBackgroundColor: AppColors.appBlack,
+                          inputBackgroundColor: AppColors.appWhite,
                           primaryColor: AppColors.appBlue,
+                          userAvatarImageBackgroundColor: AppColors.appBlue,
                           secondaryColor: AppColors.appWhite,
                           backgroundColor: AppColors.appOriginalWhite,
                           inputContainerDecoration: BoxDecoration(),
+                          attachmentButtonIcon: Icon(
+                            Icons.add_circle,
+                            size: 26,
+                            color: AppColors.appBlue,
+                          ),
+                          sendButtonIcon: Icon(
+                            Icons.send,
+                            size: 26,
+                            color: AppColors.appBlue,
+                          ),
+                          inputTextColor: AppColors.appBlack,
+                          inputTextStyle: AppText.subtitle2
+                              .copyWith(color: AppColors.appBlack),
                           inputBorderRadius: BorderRadius.circular(30),
                           inputMargin:
                               EdgeInsets.only(bottom: 10, left: 15, right: 15),

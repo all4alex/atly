@@ -43,7 +43,7 @@ class ProfileCubit extends Cubit<ProfileState> {
 
         emit(ProfileSuccess(userProfileModel: userProfileModel));
       } else {
-        emit(ProfileFailed());
+        emit(ProfileFailed(email: user.email));
       }
     } catch (e) {
       logger().e(e);

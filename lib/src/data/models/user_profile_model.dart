@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 class UserProfileModel {
+  String? email;
   String? firstName;
   String? lastName;
   String? contactNumber;
@@ -10,6 +11,7 @@ class UserProfileModel {
   String? city;
 
   UserProfileModel({
+    this.email,
     this.firstName,
     this.lastName,
     this.contactNumber,
@@ -19,6 +21,7 @@ class UserProfileModel {
   });
 
   UserProfileModel copyWith({
+    String? email,
     String? firstName,
     String? lastName,
     String? contactNumber,
@@ -27,6 +30,7 @@ class UserProfileModel {
     String? city,
   }) {
     return UserProfileModel(
+      email: email ?? this.email,
       firstName: firstName ?? this.firstName,
       lastName: lastName ?? this.lastName,
       contactNumber: contactNumber ?? this.contactNumber,
@@ -38,6 +42,7 @@ class UserProfileModel {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
+      'email': email,
       'firstName': firstName,
       'lastName': lastName,
       'contactNumber': contactNumber,
@@ -49,6 +54,7 @@ class UserProfileModel {
 
   factory UserProfileModel.fromMap(Map<String, dynamic> map) {
     return UserProfileModel(
+      email: map['email'] != null ? map['email'] as String : null,
       firstName: map['firstName'] != null ? map['firstName'] as String : null,
       lastName: map['lastName'] != null ? map['lastName'] as String : null,
       contactNumber:
@@ -66,14 +72,15 @@ class UserProfileModel {
 
   @override
   String toString() {
-    return 'UserProfileModel(firstName: $firstName, lastName: $lastName, contactNumber: $contactNumber, bday: $bday, country: $country, city: $city)';
+    return 'UserProfileModel(email: $email, firstName: $firstName, lastName: $lastName, contactNumber: $contactNumber, bday: $bday, country: $country, city: $city)';
   }
 
   @override
   bool operator ==(covariant UserProfileModel other) {
     if (identical(this, other)) return true;
 
-    return other.firstName == firstName &&
+    return other.email == email &&
+        other.firstName == firstName &&
         other.lastName == lastName &&
         other.contactNumber == contactNumber &&
         other.bday == bday &&
@@ -83,7 +90,8 @@ class UserProfileModel {
 
   @override
   int get hashCode {
-    return firstName.hashCode ^
+    return email.hashCode ^
+        firstName.hashCode ^
         lastName.hashCode ^
         contactNumber.hashCode ^
         bday.hashCode ^

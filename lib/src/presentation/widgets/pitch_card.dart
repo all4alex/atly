@@ -4,7 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:getwidget/components/avatar/gf_avatar.dart';
 import 'package:getwidget/size/gf_size.dart';
 
-import 'package:atly/src/presentation/widgets/atly_avatarar.dart';
+import 'package:atly/src/presentation/widgets/atly_name_avatar.dart';
 
 import '../../app/app.dart';
 

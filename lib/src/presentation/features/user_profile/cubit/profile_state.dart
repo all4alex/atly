@@ -19,7 +19,11 @@ class ProfileSuccess extends ProfileState {
   });
 }
 
-class ProfileFailed extends ProfileState {}
+class ProfileFailed extends ProfileState {
+  final String? email;
+
+  ProfileFailed({this.email});
+}
 
 class SaveProfileLoading extends ProfileState {}
 

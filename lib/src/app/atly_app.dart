@@ -48,7 +48,6 @@ class _AtlyAppState extends State<AtlyApp> {
             title: 'Atly',
             debugShowCheckedModeBanner: false,
             theme: ThemeData(
-                brightness: Brightness.light,
                 appBarTheme:
                     AppBarTheme(systemOverlayStyle: SystemUiOverlayStyle.dark)),
             locale: DevicePreview.locale(context),

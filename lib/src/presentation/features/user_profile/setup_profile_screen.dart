@@ -17,7 +17,8 @@ import '../../../data/models/user_profile_model.dart';
 import 'cubit/profile_cubit.dart';
 
 class SetupProfileScreen extends StatefulWidget {
-  const SetupProfileScreen({Key? key}) : super(key: key);
+  const SetupProfileScreen({Key? key, this.email}) : super(key: key);
+  final String? email;
   static const String routeName = '/setupProfile';
   static const String screenName = 'SetupProfileScreen';
   static ModalRoute route() => MaterialPageRoute(
@@ -130,6 +131,11 @@ class _SetupProfileScreenState extends State<SetupProfileScreen> {
                       style: AppText.subtitle1.copyWith(
                           color: AppColors.appBlue,
                           fontWeight: FontWeight.bold),
+                    ),
+                    Gap(20),
+                    Text(
+                      '${widget.email}',
+                      style: AppText.body2.copyWith(color: AppColors.appOrange),
                     ),
                     Gap(50),
                     Container(
@@ -284,6 +290,7 @@ class _SetupProfileScreenState extends State<SetupProfileScreen> {
                               _formKey.currentState?.save();
                               profileCubit.saveUserProfile(
                                   userProfileModel: UserProfileModel(
+                                      email: widget.email,
                                       firstName:
                                           toBeginningOfSentenceCase(firstName),
                                       lastName:
