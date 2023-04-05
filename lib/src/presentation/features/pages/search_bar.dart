@@ -1,9 +1,8 @@
+import 'package:atly/src/app/app_colors.dart';
 import 'package:flutter/material.dart';
 
-import '../../app/app_colors.dart';
-
 class SearchBar extends StatelessWidget {
-  const SearchBar({
+  SearchBar({
     this.height,
     this.width,
     this.onChanged,
@@ -31,9 +30,10 @@ class SearchBar extends StatelessWidget {
         height: height,
         width: width,
         padding: EdgeInsets.only(left: 15, right: 15, bottom: 10),
+        color: color,
         alignment: Alignment.bottomCenter,
         child: Container(
-            height: screenSize.height * .07,
+            height: screenSize.height / 15,
             alignment: Alignment.center,
             decoration: BoxDecoration(
                 border: Border.all(color: AppColors.appGrey),
@@ -60,7 +60,7 @@ class SearchBar extends StatelessWidget {
                     prefixIcon: Container(
                         child: Icon(Icons.search,
                             size: screenSize.height * 0.025,
-                            color: AppColors.appBlue)),
+                            color: AppColors.appBlack)),
                     suffixIcon: onTapSuffix != null
                         ? IconButton(
                             onPressed: () {

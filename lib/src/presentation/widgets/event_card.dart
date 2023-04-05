@@ -15,6 +15,7 @@ class EventCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
     return Card(
+      color: AppColors.appOriginalWhite,
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(10))),
       child: ClipRRect(

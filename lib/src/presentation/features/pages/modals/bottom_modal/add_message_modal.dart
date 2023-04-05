@@ -3,6 +3,8 @@ import 'package:atly/src/presentation/features/pages/cubit/chat_cubit.dart';
 import 'package:atly/src/presentation/features/pages/message_screen.dart';
 import 'package:atly/src/presentation/features/pages/modals/samples/floating_modal.dart';
 import 'package:atly/src/presentation/widgets/search_bar.dart';
+import 'package:atly/src/presentation/widgets/user_list_item.dart';
+import 'package:atly/src/utilities/debouncer.dart';
 import 'package:atly/src/utilities/logger.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
@@ -24,6 +26,8 @@ class AddMessageModal extends StatelessWidget {
   List<types.User> selectedChatUsers = [];
 
   String groupName = 'Group Name';
+  final Debouncer debouncer = Debouncer(milliseconds: 500);
+  TextEditingController textEditingController = TextEditingController();
 
   types.User? selectedContact;
 
@@ -128,26 +132,12 @@ class AddMessageModal extends StatelessWidget {
                   ),
                 ],
               ),
-              Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: TextFormField(
-                  decoration: InputDecoration(
-                    hintText: "Email",
-                    filled: true,
-                    fillColor: Colors.grey[200],
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                      borderSide: BorderSide.none,
-                    ),
-                  ),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return "Email can't be empty";
-                    }
-                    return null;
-                  },
-                  onSaved: (newValue) {},
-                ),
+              SearchBar(
+                textEditingController: textEditingController,
+                hintText: 'Search for location and places',
+                onChanged: (String text) {
+                  debouncer.run(() {});
+                },
               ),
               Container(
                 padding: EdgeInsets.only(left: 20),
@@ -187,7 +177,7 @@ class AddMessageModal extends StatelessWidget {
                                       types.User chatUser =
                                           snapshot.data![index];
 
-                                      return ChatUserListTIle(
+                                      return UserListItem(
                                         chatUser: chatUser,
                                         onChange: (isChecked, chatUser) {
                                           if (isChecked) {
@@ -271,65 +261,6 @@ class AddMessageModal extends StatelessWidget {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class ChatUserListTIle extends StatefulWidget {
-  const ChatUserListTIle({
-    super.key,
-    required this.chatUser,
-    required this.onChange,
-  });
-
-  final types.User chatUser;
-  final Function(bool, types.User) onChange;
-
-  @override
-  State<ChatUserListTIle> createState() => _ChatUserListTIleState();
-}
-
-class _ChatUserListTIleState extends State<ChatUserListTIle> {
-  bool isChecked = false;
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: Container(
-        margin: EdgeInsets.only(right: 16),
-        child: CircleAvatar(
-          backgroundColor: Colors.transparent,
-          backgroundImage: widget.chatUser.imageUrl != null
-              ? CachedNetworkImageProvider(widget.chatUser.imageUrl!)
-              : null,
-          radius: 20,
-        ),
-      ),
-      title: Text(
-        '${widget.chatUser.firstName} ${widget.chatUser.lastName}',
-        style: Theme.of(context).textTheme.titleSmall!.copyWith(
-              fontFamily: 'Poppins',
-              color: Colors.black,
-            ),
-      ),
-      trailing: GFCheckbox(
-        size: GFSize.SMALL,
-        activeBgColor: AppColors.appOrange,
-        type: GFCheckboxType.circle,
-        onChanged: (value) {
-          setState(() {
-            isChecked = value;
-          });
-          widget.onChange(isChecked, widget.chatUser);
-        },
-        value: isChecked,
-        inactiveIcon: null,
       ),
     );
   }

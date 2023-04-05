@@ -95,6 +95,38 @@ class AddActionModalBody extends StatelessWidget {
                       color: AppColors.iconBlue,
                     )),
               ),
+              Gap(12),
+              SizedBox(
+                height: MediaQuery.of(context).size.width * 0.1,
+                width: MediaQuery.of(context).size.width * 0.5,
+                child: GFButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      print('Toss button pressed');
+                    },
+                    text: 'Toss',
+                    shape: GFButtonShape.pills,
+                    color: AppColors.appWhite,
+                    textStyle: AppText.button.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.appMainGrey)),
+              ),
+              Gap(12),
+              SizedBox(
+                height: MediaQuery.of(context).size.width * 0.1,
+                width: MediaQuery.of(context).size.width * 0.5,
+                child: GFButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      print('Blast button pressed');
+                    },
+                    text: 'Blast',
+                    shape: GFButtonShape.pills,
+                    color: AppColors.appWhite,
+                    textStyle: AppText.button.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.appMainGrey)),
+              ),
             ],
           ),
         ),

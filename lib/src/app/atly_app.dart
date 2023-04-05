@@ -46,6 +46,7 @@ class _AtlyAppState extends State<AtlyApp> {
           }
           return MaterialApp(
             title: 'Atly',
+            useInheritedMediaQuery: true,
             debugShowCheckedModeBanner: false,
             theme: ThemeData(
                 appBarTheme:

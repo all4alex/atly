@@ -50,27 +50,28 @@ class PitchCard extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
             children: [
-              Row(
-                children: [
-                  Text(
-                    pitchName,
-                    style: AppText.body2
-                        .copyWith(fontWeight: FontWeight.bold, fontSize: 14),
-                  ),
-                  Text(
-                    '@',
-                    style: AppText.body2
-                        .copyWith(fontWeight: FontWeight.bold, fontSize: 14),
-                  ),
-                  Gap(2),
-                  Text(
-                    "$pitchLocation's",
-                    style: AppText.body2
-                        .copyWith(fontWeight: FontWeight.bold, fontSize: 14),
-                  ),
-                ],
+              Flexible(
+                child: Row(
+                  children: [
+                    Text(
+                      pitchName,
+                      style: AppText.body2
+                          .copyWith(fontWeight: FontWeight.bold, fontSize: 14),
+                    ),
+                    Text(
+                      '@',
+                      style: AppText.body2
+                          .copyWith(fontWeight: FontWeight.bold, fontSize: 14),
+                    ),
+                    Gap(2),
+                    Text(
+                      "$pitchLocation's",
+                      style: AppText.body2
+                          .copyWith(fontWeight: FontWeight.bold, fontSize: 14),
+                    ),
+                  ],
+                ),
               ),
               Gap(5),
               Row(
