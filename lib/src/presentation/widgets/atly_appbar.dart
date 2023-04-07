@@ -1,3 +1,4 @@
+import 'package:atly/src/app/app_screen_size_util.dart';
 import 'package:atly/src/presentation/widgets/atly_appbar_subtitle.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -23,9 +24,13 @@ class AtlyAppbar extends StatelessWidget {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Container(
-      padding: const EdgeInsets.only(left: 15, right: 15, top: 50, bottom: 15),
+      padding: const EdgeInsets.only(
+          left: 15,
+          right: 15,
+          top: AppScreenSizeUtil.appBarDefaultSize,
+          bottom: 15),
       alignment: Alignment.bottomCenter,
-      height: size.height * .15,
+      height: size.height * .19,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,

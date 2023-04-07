@@ -17,16 +17,20 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 
-import '../../../../../app/app_colors.dart';
-import '../../../../../app/app_text.dart';
-
-class AddMessageModal extends StatelessWidget {
+class AddMessageModal extends StatefulWidget {
   AddMessageModal({Key? key}) : super(key: key);
 
-  List<types.User> selectedChatUsers = [];
+  @override
+  State<AddMessageModal> createState() => _AddMessageModalState();
+}
+
+class _AddMessageModalState extends State<AddMessageModal> {
+  final List<types.User> selectedChatUsers = [];
 
   String groupName = 'Group Name';
-  final Debouncer debouncer = Debouncer(milliseconds: 500);
+
+  Debouncer debouncer = Debouncer(milliseconds: 500);
+
   TextEditingController textEditingController = TextEditingController();
 
   types.User? selectedContact;
@@ -44,222 +48,217 @@ class AddMessageModal extends StatelessWidget {
             Navigator.of(context).pop();
           }
         },
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height * .72,
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 16, left: 16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Create New',
-                          style:
-                              Theme.of(context).textTheme.labelMedium!.copyWith(
-                                    fontFamily: 'Poppins',
-                                    color: AppColors.appBlack,
-                                  ),
-                        ),
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            TextButton(
-                              onPressed: () {
-                                showCustomModalBottomSheet(
-                                    context: context,
-                                    builder: (_) => SingleChildScrollView(
-                                          controller:
-                                              ModalScrollController.of(context),
-                                          child: Container(
-                                            child: Column(
-                                              children: [
-                                                ListTile(
-                                                  title: Text('Message'),
-                                                ),
-                                                ListTile(
-                                                  title: Text('Group'),
-                                                ),
-                                              ],
-                                            ),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 16, left: 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Create New',
+                        style:
+                            Theme.of(context).textTheme.labelMedium!.copyWith(
+                                  fontFamily: 'Poppins',
+                                  color: AppColors.appBlack,
+                                ),
+                      ),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          TextButton(
+                            onPressed: () {
+                              showCustomModalBottomSheet(
+                                  context: context,
+                                  builder: (_) => SingleChildScrollView(
+                                        controller:
+                                            ModalScrollController.of(context),
+                                        child: Container(
+                                          child: Column(
+                                            children: [
+                                              ListTile(
+                                                title: Text('Message'),
+                                              ),
+                                              ListTile(
+                                                title: Text('Group'),
+                                              ),
+                                            ],
                                           ),
                                         ),
-                                    containerWidget:
-                                        (context, animation, child) =>
-                                            FloatingModal(
-                                              child: child,
-                                            ),
-                                    expand: false);
-                              },
-                              child: Text(
-                                'Message',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleSmall!
-                                    .copyWith(
-                                      fontFamily: 'Poppins',
-                                      color: AppColors.iconBlue,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                              ),
-                            ),
-                            Icon(Icons.arrow_drop_down),
-                          ],
-                        ),
-                        Text(
-                          'New Message',
-                          style:
-                              Theme.of(context).textTheme.labelSmall!.copyWith(
+                                      ),
+                                  containerWidget:
+                                      (context, animation, child) =>
+                                          FloatingModal(
+                                            child: child,
+                                          ),
+                                  expand: false);
+                            },
+                            child: Text(
+                              'Message',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleSmall!
+                                  .copyWith(
                                     fontFamily: 'Poppins',
-                                    color: Colors.black,
+                                    color: AppColors.iconBlue,
+                                    fontWeight: FontWeight.bold,
                                   ),
-                        ),
-                      ],
+                            ),
+                          ),
+                          Icon(Icons.arrow_drop_down),
+                        ],
+                      ),
+                      Text(
+                        'New Message',
+                        style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                              fontFamily: 'Poppins',
+                              color: Colors.black,
+                            ),
+                      ),
+                    ],
+                  ),
+                ),
+                IconButton(
+                  padding: EdgeInsets.zero,
+                  style: IconButton.styleFrom(),
+                  icon: Icon(
+                    Icons.close,
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ),
+            SearchBar(
+              textEditingController: textEditingController,
+              hintText: 'Search for location and places',
+              onChanged: (String text) {
+                debouncer.run(() {});
+              },
+            ),
+            Container(
+              padding: EdgeInsets.only(left: 20),
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'Suggested',
+                style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                      fontFamily: 'Poppins',
+                      color: Colors.black,
+                    ),
+              ),
+            ),
+            Expanded(
+              child: StreamBuilder<List<types.User>>(
+                stream: FirebaseChatCore.instance.users(),
+                initialData: const [],
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done ||
+                      snapshot.connectionState == ConnectionState.active) {
+                    if (snapshot.hasError) {
+                      return Center(child: Text('Something went wrong'));
+                    }
+                    if (snapshot.hasData) {}
+                    return snapshot.data!.isEmpty
+                        ? Center(
+                            child: Text('No available user.'),
+                          )
+                        : Column(
+                            children: [
+                              Expanded(
+                                child: ListView.builder(
+                                  padding: EdgeInsets.zero,
+                                  addAutomaticKeepAlives: false,
+                                  scrollDirection: Axis.vertical,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    types.User chatUser = snapshot.data![index];
+
+                                    return UserListItem(
+                                      chatUser: chatUser,
+                                      onChange: (isChecked, chatUser) {
+                                        if (isChecked) {
+                                          selectedChatUsers.add(chatUser);
+                                        } else {
+                                          selectedChatUsers.removeWhere(
+                                              (element) =>
+                                                  element.id == chatUser.id);
+                                        }
+                                        logger().d(selectedChatUsers);
+                                        logger().d(selectedChatUsers.length);
+                                      },
+                                    );
+                                  },
+                                  itemCount: snapshot.data!.length,
+                                ),
+                              ),
+                            ],
+                          );
+                  } else {
+                    return Center(child: AppLoader.loaderOne);
+                  }
+                },
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              alignment: Alignment.bottomCenter,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: SizedBox(
+                      child: GFButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        shape: GFButtonShape.pills,
+                        color: AppColors.appWhite,
+                        child: Text('Draft',
+                            style: AppText.body2.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.appBlue)),
+                      ),
                     ),
                   ),
-                  IconButton(
-                    padding: EdgeInsets.zero,
-                    style: IconButton.styleFrom(),
-                    icon: Icon(
-                      Icons.close,
+                  Gap(15),
+                  Expanded(
+                    child: SizedBox(
+                      child: GFButton(
+                        onPressed: () {
+                          logger().d(selectedChatUsers.length);
+                          if (selectedChatUsers.isNotEmpty) {
+                            if (selectedChatUsers.length > 1) {
+                              //                               String groupName = await  showCupertinoModalBottomSheet(
+                              // context: context,
+                              // useRootNavigator: true,
+                              // overlayStyle: SystemUiOverlayStyle(),
+                              // builder: (context) => Material(child:));
+                              BlocProvider.of<ChatCubit>(context)
+                                  .createGroupChat(
+                                      selectedChatUsers, groupName, context);
+                            } else {
+                              BlocProvider.of<ChatCubit>(context)
+                                  .creatDirectChat(
+                                      selectedChatUsers.first, context);
+                            }
+                          }
+                        },
+                        shape: GFButtonShape.pills,
+                        child: Text('Message',
+                            style: AppText.body2.copyWith(
+                              fontWeight: FontWeight.bold,
+                            )),
+                      ),
                     ),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
                   ),
                 ],
               ),
-              SearchBar(
-                textEditingController: textEditingController,
-                hintText: 'Search for location and places',
-                onChanged: (String text) {
-                  debouncer.run(() {});
-                },
-              ),
-              Container(
-                padding: EdgeInsets.only(left: 20),
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Suggested',
-                  style: Theme.of(context).textTheme.labelSmall!.copyWith(
-                        fontFamily: 'Poppins',
-                        color: Colors.black,
-                      ),
-                ),
-              ),
-              Expanded(
-                child: StreamBuilder<List<types.User>>(
-                  stream: FirebaseChatCore.instance.users(),
-                  initialData: const [],
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.done ||
-                        snapshot.connectionState == ConnectionState.active) {
-                      if (snapshot.hasError) {
-                        return Center(child: Text('Something went wrong'));
-                      }
-                      if (snapshot.hasData) {}
-                      return snapshot.data!.isEmpty
-                          ? Center(
-                              child: Text('No available user.'),
-                            )
-                          : Column(
-                              children: [
-                                Expanded(
-                                  child: ListView.builder(
-                                    padding: EdgeInsets.zero,
-                                    addAutomaticKeepAlives: false,
-                                    scrollDirection: Axis.vertical,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      types.User chatUser =
-                                          snapshot.data![index];
-
-                                      return UserListItem(
-                                        chatUser: chatUser,
-                                        onChange: (isChecked, chatUser) {
-                                          if (isChecked) {
-                                            selectedChatUsers.add(chatUser);
-                                          } else {
-                                            selectedChatUsers.removeWhere(
-                                                (element) =>
-                                                    element.id == chatUser.id);
-                                          }
-                                          logger().d(selectedChatUsers);
-                                          logger().d(selectedChatUsers.length);
-                                        },
-                                      );
-                                    },
-                                    itemCount: snapshot.data!.length,
-                                  ),
-                                ),
-                              ],
-                            );
-                    } else {
-                      return Center(child: AppLoader.loaderOne);
-                    }
-                  },
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                alignment: Alignment.bottomCenter,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: SizedBox(
-                        child: GFButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          shape: GFButtonShape.pills,
-                          color: AppColors.appWhite,
-                          child: Text('Draft',
-                              style: AppText.body2.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.appBlue)),
-                        ),
-                      ),
-                    ),
-                    Gap(15),
-                    Expanded(
-                      child: SizedBox(
-                        child: GFButton(
-                          onPressed: () {
-                            logger().d(selectedChatUsers.length);
-                            if (selectedChatUsers.isNotEmpty) {
-                              if (selectedChatUsers.length > 1) {
-                                //                               String groupName = await  showCupertinoModalBottomSheet(
-                                // context: context,
-                                // useRootNavigator: true,
-                                // overlayStyle: SystemUiOverlayStyle(),
-                                // builder: (context) => Material(child:));
-                                BlocProvider.of<ChatCubit>(context)
-                                    .createGroupChat(
-                                        selectedChatUsers, groupName, context);
-                              } else {
-                                BlocProvider.of<ChatCubit>(context)
-                                    .creatDirectChat(
-                                        selectedChatUsers.first, context);
-                              }
-                            }
-                          },
-                          shape: GFButtonShape.pills,
-                          child: Text('Message',
-                              style: AppText.body2.copyWith(
-                                fontWeight: FontWeight.bold,
-                              )),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ),
+            )
+          ],
         ),
       ),
     );

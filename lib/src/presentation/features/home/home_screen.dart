@@ -7,7 +7,7 @@ import 'package:atly/src/data/models/user_profile_model.dart';
 import 'package:atly/src/data/services/remote/user_service.dart';
 import 'package:atly/src/presentation/features/login/cubit/login_cubit.dart';
 import 'package:atly/src/presentation/features/login/login_screen.dart';
-import 'package:atly/src/presentation/features/pages/callendar_screen.dart';
+import 'package:atly/src/presentation/features/pages/calendar_screen.dart';
 import 'package:atly/src/presentation/features/pages/cubit/chat_cubit.dart';
 import 'package:atly/src/presentation/features/pages/dashboard_screen.dart';
 import 'package:atly/src/presentation/features/pages/messages_list_screen.dart';
@@ -99,7 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
           DashboardScreen(),
           FriendListScreen(),
           HomeAddNavModal(),
-          CallendarScreen(),
+          CalendarScreen(),
           NotificationScreen()
         ];
 
