@@ -105,73 +105,73 @@ class DashboardScreen extends StatelessWidget {
                   ]),
                 ],
               ),
-              // Column(
-              //   mainAxisSize: MainAxisSize.min,
-              //   crossAxisAlignment: CrossAxisAlignment.start,
-              //   children: [
-              //     Padding(
-              //       padding: const EdgeInsets.all(15.0),
-              //       child: Text(
-              //         'Pitches',
-              //         style: AppText.body2.copyWith(
-              //             fontWeight: FontWeight.bold,
-              //             color: AppColors.appPink),
-              //       ),
-              //     ),
-              //     GFItemsCarousel(
-              //         rowCount: 2,
-              //         itemHeight: screenSize.height * .12,
-              //         children: [
-              //           PitchCard(
-              //             pitchName: 'Pitch Name',
-              //             date: 'April 25',
-              //             endTime: '05:00 PM',
-              //             pitchLocation: 'Area 51',
-              //             startTime: '08:00 AM',
-              //             pitchHost:
-              //                 PitchHost(firstName: 'Alex', lastName: 'Ayso'),
-              //           ),
-              //           PitchCard(
-              //             pitchName: 'Pitch Name',
-              //             date: 'April 22',
-              //             endTime: '03:00 PM',
-              //             pitchLocation: 'Narnia',
-              //             startTime: '010:00 AM',
-              //             hosImageUrl: AppString.dummyImageUrl,
-              //             pitchHost:
-              //                 PitchHost(firstName: 'John', lastName: 'Wick'),
-              //           ),
-              //           PitchCard(
-              //             pitchName: 'Pitch Name',
-              //             date: 'April 25',
-              //             endTime: '05:00 PM',
-              //             pitchLocation: 'Area 51',
-              //             startTime: '08:00 AM',
-              //             pitchHost:
-              //                 PitchHost(firstName: 'Alex', lastName: 'Ayso'),
-              //           ),
-              //           PitchCard(
-              //             pitchName: 'Pitch Name',
-              //             date: 'April 22',
-              //             endTime: '03:00 PM',
-              //             pitchLocation: 'Narnia',
-              //             startTime: '010:00 AM',
-              //             hosImageUrl: AppString.dummyImageUrl,
-              //             pitchHost:
-              //                 PitchHost(firstName: 'John', lastName: 'Wick'),
-              //           ),
-              //           PitchCard(
-              //             pitchName: 'Pitch Name',
-              //             date: 'April 25',
-              //             endTime: '05:00 PM',
-              //             pitchLocation: 'Area 51',
-              //             startTime: '08:00 AM',
-              //             pitchHost:
-              //                 PitchHost(firstName: 'Alex', lastName: 'Ayso'),
-              //           ),
-              //         ]),
-              //   ],
-              // ),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Text(
+                      'Pitches',
+                      style: AppText.body2.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.appPink),
+                    ),
+                  ),
+                  GFItemsCarousel(
+                      rowCount: 2,
+                      itemHeight: screenSize.height * .12,
+                      children: [
+                        PitchCard(
+                          pitchName: 'Pitch Name',
+                          date: 'April 25',
+                          endTime: '05:00 PM',
+                          pitchLocation: 'Area 51',
+                          startTime: '08:00 AM',
+                          pitchHost:
+                              PitchHost(firstName: 'Alex', lastName: 'Ayso'),
+                        ),
+                        PitchCard(
+                          pitchName: 'Pitch Name',
+                          date: 'April 22',
+                          endTime: '03:00 PM',
+                          pitchLocation: 'Narnia',
+                          startTime: '010:00 AM',
+                          hosImageUrl: AppString.dummyImageUrl,
+                          pitchHost:
+                              PitchHost(firstName: 'John', lastName: 'Wick'),
+                        ),
+                        PitchCard(
+                          pitchName: 'Pitch Name',
+                          date: 'April 25',
+                          endTime: '05:00 PM',
+                          pitchLocation: 'Area 51',
+                          startTime: '08:00 AM',
+                          pitchHost:
+                              PitchHost(firstName: 'Alex', lastName: 'Ayso'),
+                        ),
+                        PitchCard(
+                          pitchName: 'Pitch Name',
+                          date: 'April 22',
+                          endTime: '03:00 PM',
+                          pitchLocation: 'Narnia',
+                          startTime: '010:00 AM',
+                          hosImageUrl: AppString.dummyImageUrl,
+                          pitchHost:
+                              PitchHost(firstName: 'John', lastName: 'Wick'),
+                        ),
+                        PitchCard(
+                          pitchName: 'Pitch Name',
+                          date: 'April 25',
+                          endTime: '05:00 PM',
+                          pitchLocation: 'Area 51',
+                          startTime: '08:00 AM',
+                          pitchHost:
+                              PitchHost(firstName: 'Alex', lastName: 'Ayso'),
+                        ),
+                      ]),
+                ],
+              ),
               Gap(20),
               Card(
                 color: AppColors.appOriginalWhite,

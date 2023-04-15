@@ -2,6 +2,7 @@ import 'package:atly/src/app/app.dart';
 import 'package:atly/src/app/app_text.dart';
 import 'package:atly/src/presentation/features/pages/cubit/chat_cubit.dart';
 import 'package:atly/src/presentation/features/pages/message_screen.dart';
+import 'package:atly/src/presentation/features/pages/modals/samples/modal_simple.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -35,8 +36,16 @@ class AddActionModalBody extends StatelessWidget {
                 width: MediaQuery.of(context).size.width * 0.5,
                 child: GFButton(
                   onPressed: () {
-                    Navigator.pop(context);
-                    print('Event button pressed');
+                    showCupertinoModalBottomSheet(
+                      context: context,
+                      useRootNavigator: true,
+                      overlayStyle: SystemUiOverlayStyle(),
+                      backgroundColor: Colors.transparent,
+                      builder: (context) => BlocProvider(
+                        create: (context) => ChatCubit(),
+                        child: SimpleModal(),
+                      ),
+                    );
                   },
                   text: 'Event',
                   shape: GFButtonShape.pills,
@@ -51,8 +60,16 @@ class AddActionModalBody extends StatelessWidget {
                 width: MediaQuery.of(context).size.width * 0.5,
                 child: GFButton(
                     onPressed: () {
-                      Navigator.pop(context);
-                      print('Pitch button pressed');
+                      showCupertinoModalBottomSheet(
+                        context: context,
+                        useRootNavigator: true,
+                        overlayStyle: SystemUiOverlayStyle(),
+                        backgroundColor: Colors.transparent,
+                        builder: (context) => BlocProvider(
+                          create: (context) => ChatCubit(),
+                          child: SimpleModal(),
+                        ),
+                      );
                     },
                     text: 'Pitch',
                     shape: GFButtonShape.pills,
@@ -101,8 +118,16 @@ class AddActionModalBody extends StatelessWidget {
                 width: MediaQuery.of(context).size.width * 0.5,
                 child: GFButton(
                     onPressed: () {
-                      Navigator.pop(context);
-                      print('Toss button pressed');
+                      showCupertinoModalBottomSheet(
+                        context: context,
+                        useRootNavigator: true,
+                        overlayStyle: SystemUiOverlayStyle(),
+                        backgroundColor: Colors.transparent,
+                        builder: (context) => BlocProvider(
+                          create: (context) => ChatCubit(),
+                          child: SimpleModal(),
+                        ),
+                      );
                     },
                     text: 'Toss',
                     shape: GFButtonShape.pills,
@@ -117,8 +142,16 @@ class AddActionModalBody extends StatelessWidget {
                 width: MediaQuery.of(context).size.width * 0.5,
                 child: GFButton(
                     onPressed: () {
-                      Navigator.pop(context);
-                      print('Blast button pressed');
+                      showCupertinoModalBottomSheet(
+                        context: context,
+                        useRootNavigator: true,
+                        overlayStyle: SystemUiOverlayStyle(),
+                        backgroundColor: Colors.transparent,
+                        builder: (context) => BlocProvider(
+                          create: (context) => ChatCubit(),
+                          child: SimpleModal(),
+                        ),
+                      );
                     },
                     text: 'Blast',
                     shape: GFButtonShape.pills,

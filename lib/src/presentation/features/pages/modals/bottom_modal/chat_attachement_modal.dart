@@ -1,3 +1,4 @@
+import 'package:atly/src/app/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class ChatAttachementModal extends StatelessWidget {
@@ -15,24 +16,23 @@ class ChatAttachementModal extends StatelessWidget {
   Widget build(BuildContext context) {
     return Dialog(
       backgroundColor: Colors.transparent,
-      elevation: 0,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildCircleIconButton(
-            icon: Icons.favorite,
+            icon: Icons.image,
             onPressed: onPressedButton1,
           ),
           SizedBox(height: 8),
           _buildCircleIconButton(
-            icon: Icons.chat_bubble,
+            icon: Icons.attach_file_outlined,
             onPressed: onPressedButton2,
           ),
           SizedBox(height: 8),
           _buildCircleIconButton(
-            icon: Icons.share,
+            icon: Icons.cancel,
             onPressed: onPressedButton3,
           ),
         ],

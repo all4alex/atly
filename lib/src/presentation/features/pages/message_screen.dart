@@ -136,22 +136,29 @@ class _MessageScreenState extends State<MessageScreen> {
   void _handleAtachmentPressed() {
     showDialog(
       context: context,
+      barrierColor: Colors.transparent,
       builder: (BuildContext context) {
         return Align(
           alignment: Alignment.bottomLeft,
-          child: ChatAttachementModal(
-            onPressedButton1: () {
-              // Handle button 1 press
-              Navigator.of(context).pop();
-            },
-            onPressedButton2: () {
-              // Handle button 2 press
-              Navigator.of(context).pop();
-            },
-            onPressedButton3: () {
-              // Handle button 3 press
-              Navigator.of(context).pop();
-            },
+          child: Container(
+            height: 300,
+            width: 130,
+            child: ChatAttachementModal(
+              onPressedButton1: () {
+                Navigator.of(context).pop();
+
+                _handleImageSelection();
+              },
+              onPressedButton2: () {
+                // Handle button 2 press
+                Navigator.of(context).pop();
+                _handleFileSelection();
+              },
+              onPressedButton3: () {
+                // Handle button 3 press
+                Navigator.of(context).pop();
+              },
+            ),
           ),
         );
       },
