@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:atly/src/app/atly_app.dart';
+import 'package:atly/src/utilities/local_notification_helper.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'firebase_options.dart';
 
@@ -34,6 +36,17 @@ Future<void> main() async {
   firebaseAuth = FirebaseAuth.instance;
   // firebaseAuth.useAuthEmulator('localhost', 1122);
   // FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
+
+  LocalNotificationHelper localNotificationHelper = LocalNotificationHelper();
+  await localNotificationHelper.initNotifications();
+  await Permission.storage.request();
+  await Permission.camera.request();
+  await Permission.accessMediaLocation.request();
+  await Permission.mediaLibrary.request();
+  // await Permission.manageExternalStorage.request();
+  await Permission.photos.request();
+  await Permission.videos.request();
+
   runApp(
     AtlyApp(),
   );

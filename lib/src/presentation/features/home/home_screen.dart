@@ -3,7 +3,9 @@ import 'package:atly/src/app/app_loader.dart';
 import 'package:atly/src/app/app_strings.dart';
 import 'package:atly/src/app/app_svg_icons.dart';
 import 'package:atly/src/app/app_text.dart';
+import 'package:atly/src/app/atly_app.dart';
 import 'package:atly/src/data/models/user_profile_model.dart';
+import 'package:atly/src/data/services/remote/event_service.dart';
 import 'package:atly/src/data/services/remote/user_service.dart';
 import 'package:atly/src/presentation/features/login/cubit/login_cubit.dart';
 import 'package:atly/src/presentation/features/login/login_screen.dart';
@@ -18,12 +20,14 @@ import 'package:atly/src/presentation/features/user_profile/cubit/profile_cubit.
 import 'package:atly/src/presentation/features/user_profile/setup_profile_screen.dart';
 import 'package:atly/src/presentation/widgets/cubit/appbar_subtitle_cubit.dart';
 import 'package:atly/src/presentation/widgets/nav_speed_dial.dart';
+import 'package:atly/src/utilities/local_notification_helper.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
@@ -80,9 +84,18 @@ class _HomeScreenState extends State<HomeScreen> {
   late ProfileCubit profileCubit;
   late LoginCubit loginCubit;
   String appBarSubtitle = '';
+
+  EventService _firestoreService = EventService();
+  LocalNotificationHelper _localNotificationHelper = LocalNotificationHelper();
   @override
   void initState() {
     super.initState();
+    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+        FlutterLocalNotificationsPlugin();
+    flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()!
+        .requestPermission();
     _controller = PersistentTabController();
     profileCubit = BlocProvider.of<ProfileCubit>(context);
     loginCubit = BlocProvider.of<LoginCubit>(context);
@@ -256,6 +269,19 @@ class _HomeScreenState extends State<HomeScreen> {
                 pageTransitionAnimation: PageTransitionAnimation.cupertino,
               );
             }
+            if (state is ProfileSuccess) {
+              _firestoreService
+                  .getInvitationsByRecipient(userProfileModel.email!)
+                  .listen((invitations) {
+                for (var invitation in invitations) {
+                  if (invitation.status == 'pending') {
+                    _localNotificationHelper.showNotification(
+                        "New Event Invitation",
+                        "You have been invited to an event: ${invitation.eventId}");
+                  }
+                }
+              });
+            }
             if (state is SaveProfileSuccess) {
               profileCubit.getUserProfile();
             }
@@ -280,8 +306,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: GFButton(
                     onPressed: () => showDialog(
                           context: context,
-                          builder: (context) {
-                            return AddActionModalBody();
+                          builder: (_) {
+                            return AddActionModalBody(
+                              currentUser: currentUser!.email!,
+                            );
                           },
                         ),
                     child: Icon(

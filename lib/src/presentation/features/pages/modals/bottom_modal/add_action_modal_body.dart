@@ -10,9 +10,13 @@ import 'package:gap/gap.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
+import '../samples/modal_with_scroll.dart';
+import 'add_event_modal.dart';
 import 'add_message_modal.dart';
 
 class AddActionModalBody extends StatelessWidget {
+  AddActionModalBody({required this.currentUser});
+  final String currentUser;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -36,14 +40,15 @@ class AddActionModalBody extends StatelessWidget {
                 width: MediaQuery.of(context).size.width * 0.5,
                 child: GFButton(
                   onPressed: () {
-                    showCupertinoModalBottomSheet(
+                    showMaterialModalBottomSheet(
                       context: context,
                       useRootNavigator: true,
-                      overlayStyle: SystemUiOverlayStyle(),
                       backgroundColor: Colors.transparent,
                       builder: (context) => BlocProvider(
                         create: (context) => ChatCubit(),
-                        child: SimpleModal(),
+                        child: AddEventModal(
+                          currentUser: '',
+                        ),
                       ),
                     );
                   },
@@ -125,7 +130,7 @@ class AddActionModalBody extends StatelessWidget {
                         backgroundColor: Colors.transparent,
                         builder: (context) => BlocProvider(
                           create: (context) => ChatCubit(),
-                          child: SimpleModal(),
+                          child: ModalWithScroll(),
                         ),
                       );
                     },

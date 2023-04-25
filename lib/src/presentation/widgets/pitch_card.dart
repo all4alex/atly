@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -76,17 +77,27 @@ class PitchCard extends StatelessWidget {
               Gap(5),
               Row(
                 children: [
-                  Text(
-                    date,
-                    style: AppText.caption
-                        .copyWith(fontWeight: FontWeight.bold, fontSize: 12),
+                  SizedBox(
+                    width: screenSize.width * .2,
+                    child: AutoSizeText(
+                      date,
+                      maxLines: 1,
+                      minFontSize: 8,
+                      style: AppText.caption
+                          .copyWith(color: AppColors.appBlack, fontSize: 12),
+                    ),
                   ),
                   Gap(5),
-                  Text(
-                    '$startTime - $endTime',
-                    style: AppText.caption
-                        .copyWith(color: AppColors.appGrey, fontSize: 12),
-                  ),
+                  SizedBox(
+                    width: screenSize.width * .2,
+                    child: AutoSizeText(
+                      '$startTime - $endTime',
+                      maxLines: 1,
+                      minFontSize: 8,
+                      style: AppText.caption
+                          .copyWith(color: AppColors.appGrey, fontSize: 12),
+                    ),
+                  )
                 ],
               ),
               Gap(10),
